@@ -17,13 +17,28 @@ namespace g = game;
 namespace e = engine;
 namespace util = utility;
 
+// Types
+typedef std::map<g::Contexts, e::Context*> ContextList_t;
+
+void ChangeCurrentContext(
+	ContextList_t& contexts,
+	g::Contexts* currentContext,
+	g::Contexts newContext
+) {
+	// TODO: add unload/close functionality to contexts
+	*currentContext = newContext;
+	contexts[*currentContext]->Reload();
+}
+
 int main() {
 	// Initialise Contexts
 	g::contexts::SplashScreen contextSplashScreen{ };
+	g::contexts::Game contextGame{ };
 
 	// Map Contexts
-	std::map<g::Contexts, e::Context*> contexts {
+	ContextList_t contexts {
 		std::make_pair(g::Contexts::SplashScreen, &contextSplashScreen),
+		std::make_pair(g::Contexts::Game, &contextGame),
 	};
 
 	// Initialise Render components
@@ -43,6 +58,16 @@ int main() {
 		{
 			if ( event->is<sf::Event::Closed>() )
 				window.close();
+			else if (
+				event->is<sf::Event::KeyPressed>() &&
+				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G)
+				ChangeCurrentContext(
+					contexts,
+					&selectedContext,
+					selectedContext == g::Contexts::SplashScreen ?
+						g::Contexts::Game :
+						g::Contexts::SplashScreen
+				);
 		}
 
 		window.clear();

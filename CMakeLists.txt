@@ -17,7 +17,10 @@ add_executable(
     main
     src/main.cpp
     src/utility/utility.cpp
+
     src/game/contexts/splashscreen.cpp
+    src/game/contexts/game.cpp
+    
     src/engine/context/context.cpp
 )
 target_compile_features(main PRIVATE cxx_std_17)

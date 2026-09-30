@@ -7,7 +7,8 @@
 namespace game {
     enum Contexts {
         SplashScreen = 0,
-        count
+        Game,
+        count,
     };
 
     namespace contexts {
@@ -15,6 +16,23 @@ namespace game {
             // Public functions
         public:
             SplashScreen();
+            void Init();
+            void Reload();
+            void Poll();
+            void Physics();
+            void UIPhysics();
+            void DrawContext(sf::RenderWindow&);
+            void DrawUIContext();
+
+            // Private members
+        private:
+            sf::RectangleShape testShape;
+        };
+
+        class Game : public engine::Context {
+            // Public functions
+        public:
+            Game();
             void Init();
             void Reload();
             void Poll();
