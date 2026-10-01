@@ -11,7 +11,6 @@
 // Game Classes
 #include "game/contexts/contexts.hpp" // Window context classes
 
-
 // Namespace simplifications
 namespace g = game;
 namespace e = engine;
@@ -20,55 +19,59 @@ namespace util = utility;
 // Types
 typedef std::map<g::Contexts, e::Context*> ContextList_t;
 
+// Context knowledge
+g::Contexts previousContext{ g::Contexts::Terminate };
+g::Contexts selectedContext{ g::Contexts::SplashScreen };
+g::Contexts nextContext{ selectedContext };
+
 void ChangeCurrentContext(
-	ContextList_t& contexts,
-	g::Contexts* currentContext,
-	g::Contexts newContext
+	ContextList_t& contexts
 ) {
-	// TODO: add unload/close functionality to contexts
+	previousContext = selectedContext;
+	// TODO: Add Context::Unload() function
 	// contexts[*currentContext]->Unload();
-	if (newContext == g::Contexts::Terminate) {
+	if (nextContext == g::Contexts::Terminate) {
 		exit(0);
 	}
-	*currentContext = newContext;
-	contexts[*currentContext]->Reload();
+	selectedContext = nextContext;
+	contexts[selectedContext]->Reload();
 }
 
 int main() {
 	// Load all fonts
 	sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
 
+	// Initialise Render components
+	sf::RenderWindow window( sf::VideoMode( util::windowSize ), util::windowName );
+	window.setFramerateLimit(util::stepRate);
+
 	// Load all textures
+	sf::Texture screenshotTexture{ window.getSize() };
 	sf::Texture splashScreenTexture{ ASSET_FILE(util::assets::splashScreen) };
 	sf::Texture tilemapTexture{ ASSET_FILE(util::assets::tilemap) };
 
 	// Initialise Contexts
 	g::contexts::SplashScreen contextSplashScreen{ defaultFont, splashScreenTexture };
 	g::contexts::Game contextGame{ tilemapTexture };
+	g::contexts::Settings contextSettings{ window, screenshotTexture, previousContext };
 
 	// Map Contexts
 	ContextList_t contexts {
 		std::make_pair(g::Contexts::SplashScreen, &contextSplashScreen),
 		std::make_pair(g::Contexts::Game, &contextGame),
+		std::make_pair(g::Contexts::Settings, &contextSettings),
 	};
-
-	// Initialise Render components
-	sf::RenderWindow window( sf::VideoMode( util::windowSize ), util::windowName );
-	window.setFramerateLimit(util::stepRate);
 
 	sf::View viewGame{ window.getView() };
 	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::windowSize) };
 
-	g::Contexts selectedContext{ g::Contexts::SplashScreen };
-	g::Contexts nextContext{ selectedContext };
 	// TODO: Find a nice way to remove this and go straight to reload below
 	contexts[selectedContext]->Reload();
 
 	// Step loop
 	while (window.isOpen()) {
 		if (selectedContext != nextContext) {
-			// TODO: Add Context::Unload() function
-			ChangeCurrentContext(contexts, &selectedContext, nextContext);
+			ChangeCurrentContext(contexts);
 		}
 
 		// System polls
@@ -97,16 +100,12 @@ int main() {
 				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G
 			) {
 				nextContext = selectedContext == g::Contexts::SplashScreen ?
-						g::Contexts::Game :
-						g::Contexts::SplashScreen;
-				ChangeCurrentContext(
-					contexts,
-					&selectedContext,
-					nextContext
-				);
+					g::Contexts::Game :
+					g::Contexts::SplashScreen;
+				ChangeCurrentContext(contexts);
 			}
 			// Let current context handle poll
-			contexts[selectedContext]->Poll(event, window, &nextContext);
+			(void)contexts[selectedContext]->Poll(event, window, &nextContext);
 		}
 
 		// Perform physic steps

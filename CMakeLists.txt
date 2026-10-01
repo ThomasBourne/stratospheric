@@ -21,6 +21,7 @@ add_executable(
 
     src/game/contexts/splashscreen.cpp
     src/game/contexts/game.cpp
+    src/game/contexts/settings.cpp
     
     src/engine/context/context.cpp
 )

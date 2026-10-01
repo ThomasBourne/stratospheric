@@ -12,7 +12,7 @@ SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : e
         this->actionButtons = {
             SplashScreen::Button(sf::Text(this->sharedFont, "Continue"), Contexts::Game),
             SplashScreen::Button(sf::Text(this->sharedFont, "New Game"), Contexts::Game),
-            SplashScreen::Button(sf::Text(this->sharedFont, "Settings"), Contexts::Game),
+            SplashScreen::Button(sf::Text(this->sharedFont, "Settings"), Contexts::Settings),
             SplashScreen::Button(sf::Text(this->sharedFont, "Exit"), Contexts::Terminate),
         };
     }
