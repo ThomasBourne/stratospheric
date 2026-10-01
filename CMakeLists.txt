@@ -24,7 +24,7 @@ add_executable(
     
     src/engine/context/context.cpp
 )
-target_compile_features(stratospheric PRIVATE cxx_std_17)
+target_compile_features(stratospheric PRIVATE cxx_std_23)
 target_link_libraries(stratospheric PRIVATE SFML::Graphics)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT stratospheric)

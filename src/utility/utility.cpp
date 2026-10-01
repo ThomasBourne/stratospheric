@@ -8,6 +8,10 @@ unsigned int utility::stepRate{ 200 };
 
 std::string utility::assets::assetFolderPath{ "/assets/" };
 const std::string utility::assets::splashScreen{ "splash_screen.png" };
+const std::string utility::assets::tilemap{ "tilemap.png" };
+const std::string utility::assets::defaultFont{ "fc.ttf" };
+
+const int utility::tilemapDefinition{ 100 };
 
 std::string utility::GetCWD() {
     std::string cwd = std::filesystem::current_path().string();

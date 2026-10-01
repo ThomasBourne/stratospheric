@@ -2,22 +2,21 @@
 
 #include "SFML/System/Vector2.hpp"
 
+#include "../../utility/utility.hpp"
+
 using namespace game::contexts;
 
-Game::Game() : engine::Context()
+Game::Game(sf::Texture& tilemap) : engine::Context(),
+    tileExample(tilemap)
     { }
 
-void Game::Init() {
-    this->testShape.setSize(sf::Vector2f(100.f, 100.f));
-    this->testShape.setFillColor(sf::Color::Blue);
-}
-
 void Game::Reload() {
-    testShape.setPosition(sf::Vector2f(800.f, 200.f));
+    tileExample.setPosition(sf::Vector2f(800.f, 200.f));
+    tileExample.setTextureRect({{0, 0}, {utility::tilemapDefinition, utility::tilemapDefinition}});
 }
 
-void Game::Poll() {
-
+bool Game::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
+    return false;
 }
 
 void Game::Physics() {
@@ -33,7 +32,7 @@ void Game::ResizeUI(sf::View&) {
 }
 
 void Game::DrawContext(sf::RenderWindow& win) {
-    win.draw(this->testShape);
+    win.draw(this->tileExample);
 }
 
 void Game::DrawUIContext(sf::RenderWindow& win) {

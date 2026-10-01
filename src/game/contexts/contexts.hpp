@@ -1,42 +1,53 @@
 #ifndef GAME_CONTEXTS_CONTEXTS_HPP
 #define GAME_CONTEXTS_CONTEXTS_HPP
 
+// Global Imports
+#include <vector>
+
 // Local Imports
 #include "../../engine/context/context.hpp"
 
 namespace game {
-    enum Contexts {
+    enum class Contexts {
         SplashScreen = 0,
         Game,
-        count,
+        Terminate
     };
 
     namespace contexts {
         class SplashScreen : public engine::Context {
             // Public functions
         public:
-            SplashScreen(sf::Texture&);
-            void Init();
+            SplashScreen(sf::Font&, sf::Texture&);
             void Reload();
-            void Poll();
+            bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
             void ResizeUI(sf::View&);
             void DrawContext(sf::RenderWindow&);
             void DrawUIContext(sf::RenderWindow&);
 
+            // Private classes
+        private:
+            struct Button {
+                sf::Text displayText;
+                Contexts action;
+                Button(sf::Text t, Contexts c) : displayText(t), action(c) { }
+            };
+            
             // Private members
         private:
             sf::Sprite splashImage;
+            sf::Font& sharedFont;
+            std::vector<SplashScreen::Button> actionButtons;
         };
 
         class Game : public engine::Context {
             // Public functions
         public:
-            Game();
-            void Init();
+            Game(sf::Texture&);
             void Reload();
-            void Poll();
+            bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
             void ResizeUI(sf::View&);
@@ -45,7 +56,7 @@ namespace game {
 
             // Private members
         private:
-            sf::RectangleShape testShape;
+            sf::Sprite tileExample;
         };
     }
 }

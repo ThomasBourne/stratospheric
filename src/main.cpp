@@ -26,18 +26,25 @@ void ChangeCurrentContext(
 	g::Contexts newContext
 ) {
 	// TODO: add unload/close functionality to contexts
+	// contexts[*currentContext]->Unload();
+	if (newContext == g::Contexts::Terminate) {
+		exit(0);
+	}
 	*currentContext = newContext;
 	contexts[*currentContext]->Reload();
 }
 
 int main() {
+	// Load all fonts
+	sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
+
 	// Load all textures
 	sf::Texture splashScreenTexture{ ASSET_FILE(util::assets::splashScreen) };
-	// sf::Texture tilemapTexture{};
+	sf::Texture tilemapTexture{ ASSET_FILE(util::assets::tilemap) };
 
 	// Initialise Contexts
-	g::contexts::SplashScreen contextSplashScreen{ splashScreenTexture };
-	g::contexts::Game contextGame{ };
+	g::contexts::SplashScreen contextSplashScreen{ defaultFont, splashScreenTexture };
+	g::contexts::Game contextGame{ tilemapTexture };
 
 	// Map Contexts
 	ContextList_t contexts {
@@ -51,16 +58,19 @@ int main() {
 
 	sf::View viewGame{ window.getView() };
 	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::windowSize) };
-	
-	for (auto& c : contexts) {
-		c.second->Init();
-	}
 
-	g::Contexts selectedContext{ g::SplashScreen };
+	g::Contexts selectedContext{ g::Contexts::SplashScreen };
+	g::Contexts nextContext{ selectedContext };
+	// TODO: Find a nice way to remove this and go straight to reload below
 	contexts[selectedContext]->Reload();
 
 	// Step loop
 	while (window.isOpen()) {
+		if (selectedContext != nextContext) {
+			// TODO: Add Context::Unload() function
+			ChangeCurrentContext(contexts, &selectedContext, nextContext);
+		}
+
 		// System polls
 		while (const std::optional event = window.pollEvent()) {
 			// Exit application
@@ -84,14 +94,19 @@ int main() {
 			// Custom Function
 			else if (
 				event->is<sf::Event::KeyPressed>() &&
-				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G)
+				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G
+			) {
+				nextContext = selectedContext == g::Contexts::SplashScreen ?
+						g::Contexts::Game :
+						g::Contexts::SplashScreen;
 				ChangeCurrentContext(
 					contexts,
 					&selectedContext,
-					selectedContext == g::Contexts::SplashScreen ?
-						g::Contexts::Game :
-						g::Contexts::SplashScreen
+					nextContext
 				);
+			}
+			// Let current context handle poll
+			contexts[selectedContext]->Poll(event, window, &nextContext);
 		}
 
 		// Perform physic steps

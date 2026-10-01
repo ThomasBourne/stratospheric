@@ -24,7 +24,11 @@ namespace utility {
     namespace assets {
         extern std::string assetFolderPath;
         extern const std::string splashScreen;
+        extern const std::string tilemap;
+        extern const std::string defaultFont;
     }
+
+    extern const int tilemapDefinition;
 
     std::string GetCWD();
 }

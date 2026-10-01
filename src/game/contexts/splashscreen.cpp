@@ -5,11 +5,17 @@
 
 using namespace game::contexts;
 
-SplashScreen::SplashScreen(sf::Texture& splashTexture) : engine::Context(),
+SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : engine::Context(),
+    sharedFont(sharedFont),
     splashImage(splashTexture)
-    { }
-
-void SplashScreen::Init() { }
+    {
+        this->actionButtons = {
+            SplashScreen::Button(sf::Text(this->sharedFont, "Continue"), Contexts::Game),
+            SplashScreen::Button(sf::Text(this->sharedFont, "New Game"), Contexts::Game),
+            SplashScreen::Button(sf::Text(this->sharedFont, "Settings"), Contexts::Game),
+            SplashScreen::Button(sf::Text(this->sharedFont, "Exit"), Contexts::Terminate),
+        };
+    }
 
 void SplashScreen::Reload() {
     this->splashImage.setPosition({0.f, 0.f});;
@@ -20,10 +26,31 @@ void SplashScreen::Reload() {
             utility::windowSize.y / this->splashImage.getGlobalBounds().size.y
         )
     );
+
+    for (int i = 0; i < this->actionButtons.size(); i++) {
+        this->actionButtons[i].displayText.setPosition(
+            {
+                (70 * this->splashImage.getScale().x) - this->actionButtons[i].displayText.getGlobalBounds().size.x / 2,
+                ((30 * this->splashImage.getScale().y) * i) + (60 * this->splashImage.getScale().y)
+            }
+        );
+    }
 }
 
-void SplashScreen::Poll() {
-
+bool SplashScreen::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
+    if (
+        event->is<sf::Event::MouseButtonPressed>() &&
+        event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left
+    ) {
+        for (size_t i = 0; i < this->actionButtons.size(); i++) {
+            if (this->actionButtons[i].displayText.getGlobalBounds().contains(sf::Vector2f(win.mapPixelToCoords(sf::Mouse::getPosition(win), win.getView())))) {
+                *((Contexts*)nextContext) = this->actionButtons[i].action;
+                return true;
+            }
+        }
+        return true;
+    }
+    return false;
 }
 
 void SplashScreen::Physics() { }
@@ -40,19 +67,22 @@ void SplashScreen::ResizeUI(sf::View& viewUI) {
             viewUI.getSize().y / this->splashImage.getGlobalBounds().size.y
         )
     );
-    // for (size_t i = 0; i < items.buttons.size(); i++) {
-    //     items.buttons[i].setPosition(
-    //         sf::Vector2f(
-    //             (70 * items.backgroundImage.getScale().x) - items.buttons[i].getGlobalBounds().size.x / 2,
-    //             ((30 * items.backgroundImage.getScale().y) * i) + (60 * items.backgroundImage.getScale().y)
-    //         )
-    //     );
-    // }
+
+    for (size_t i = 0; i < this->actionButtons.size(); i++) {
+        this->actionButtons[i].displayText.setPosition(
+            {
+                (70 * this->splashImage.getScale().x) - this->actionButtons[i].displayText.getGlobalBounds().size.x / 2,
+                ((30 * this->splashImage.getScale().y) * i) + (60 * this->splashImage.getScale().y)
+            }
+        );
+    }
 }
 
 void SplashScreen::DrawContext(sf::RenderWindow& win) { }
 
 void SplashScreen::DrawUIContext(sf::RenderWindow& win) {
     win.draw(this->splashImage);
-
+    for (const auto& button : this->actionButtons) {
+        win.draw(button.displayText);
+    }
 }
