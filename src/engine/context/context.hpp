@@ -13,9 +13,10 @@ namespace engine {
         virtual void Reload();
         virtual void Poll();
         virtual void Physics();
-        virtual void UIPhysics();
+        virtual void PhysicsUI();
+        virtual void ResizeUI(sf::View&);
         virtual void DrawContext(sf::RenderWindow&);
-        virtual void DrawUIContext();
+        virtual void DrawUIContext(sf::RenderWindow&);
     };
 }
 

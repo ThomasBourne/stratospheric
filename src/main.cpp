@@ -31,8 +31,12 @@ void ChangeCurrentContext(
 }
 
 int main() {
+	// Load all textures
+	sf::Texture splashScreenTexture{ ASSET_FILE(util::assets::splashScreen) };
+	// sf::Texture tilemapTexture{};
+
 	// Initialise Contexts
-	g::contexts::SplashScreen contextSplashScreen{ };
+	g::contexts::SplashScreen contextSplashScreen{ splashScreenTexture };
 	g::contexts::Game contextGame{ };
 
 	// Map Contexts
@@ -43,6 +47,10 @@ int main() {
 
 	// Initialise Render components
 	sf::RenderWindow window( sf::VideoMode( util::windowSize ), util::windowName );
+	window.setFramerateLimit(util::stepRate);
+
+	sf::View viewGame{ window.getView() };
+	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::windowSize) };
 	
 	for (auto& c : contexts) {
 		c.second->Init();
@@ -52,12 +60,28 @@ int main() {
 	contexts[selectedContext]->Reload();
 
 	// Step loop
-	while ( window.isOpen() )
-	{
-		while ( const std::optional event = window.pollEvent() )
-		{
+	while (window.isOpen()) {
+		// System polls
+		while (const std::optional event = window.pollEvent()) {
+			// Exit application
 			if ( event->is<sf::Event::Closed>() )
 				window.close();
+			else if (event->is<sf::Event::Resized>()) {
+				// Resize views
+				viewGame.setSize((sf::Vector2f)window.getSize());
+				viewUI.setSize((sf::Vector2f)window.getSize());
+				// Recentre ui view (game view should remain unchanged)
+				viewUI.setCenter(
+					sf::Vector2f(
+						(float)viewUI.getSize().x / 2,
+						(float)viewUI.getSize().y / 2
+					)
+				);
+				// While this resizes correctly, it does not move items calculated at 1920x1080 to new padding
+				// Call custom resize function for context to fix this issue
+				contexts[selectedContext]->ResizeUI(viewUI);
+			}
+			// Custom Function
 			else if (
 				event->is<sf::Event::KeyPressed>() &&
 				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G)
@@ -70,8 +94,19 @@ int main() {
 				);
 		}
 
+		// Perform physic steps
+		window.setView(viewGame);
+		contexts[selectedContext]->Physics();
+		viewGame = window.getView();
+		window.setView(viewUI);
+		contexts[selectedContext]->PhysicsUI();
+
 		window.clear();
+		window.setView(viewGame);
 		contexts[selectedContext]->DrawContext(window);
+		viewGame = window.getView();
+		window.setView(viewUI);
+		contexts[selectedContext]->DrawUIContext(window);
 		window.display();
 	}
 }

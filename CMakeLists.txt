@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(CMakeSFMLProject LANGUAGES CXX)
+project(STRATOSPHERIC LANGUAGES CXX)
 
 set(CMAKE_EXPORcmaT_COMPILE_COMMANDS ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -12,9 +12,10 @@ FetchContent_Declare(SFML
     EXCLUDE_FROM_ALL
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
+add_definitions(-DSFML_STATIC)
 
 add_executable(
-    main
+    stratospheric
     src/main.cpp
     src/utility/utility.cpp
 
@@ -23,7 +24,7 @@ add_executable(
     
     src/engine/context/context.cpp
 )
-target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_compile_features(stratospheric PRIVATE cxx_std_17)
+target_link_libraries(stratospheric PRIVATE SFML::Graphics)
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT stratospheric)

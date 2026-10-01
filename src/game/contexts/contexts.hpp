@@ -15,18 +15,19 @@ namespace game {
         class SplashScreen : public engine::Context {
             // Public functions
         public:
-            SplashScreen();
+            SplashScreen(sf::Texture&);
             void Init();
             void Reload();
             void Poll();
             void Physics();
-            void UIPhysics();
+            void PhysicsUI();
+            void ResizeUI(sf::View&);
             void DrawContext(sf::RenderWindow&);
-            void DrawUIContext();
+            void DrawUIContext(sf::RenderWindow&);
 
             // Private members
         private:
-            sf::RectangleShape testShape;
+            sf::Sprite splashImage;
         };
 
         class Game : public engine::Context {
@@ -37,9 +38,10 @@ namespace game {
             void Reload();
             void Poll();
             void Physics();
-            void UIPhysics();
+            void PhysicsUI();
+            void ResizeUI(sf::View&);
             void DrawContext(sf::RenderWindow&);
-            void DrawUIContext();
+            void DrawUIContext(sf::RenderWindow&);
 
             // Private members
         private:

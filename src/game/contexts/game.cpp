@@ -24,7 +24,11 @@ void Game::Physics() {
 
 }
 
-void Game::UIPhysics() {
+void Game::PhysicsUI() {
+
+}
+
+void Game::ResizeUI(sf::View&) {
 
 }
 
@@ -32,6 +36,6 @@ void Game::DrawContext(sf::RenderWindow& win) {
     win.draw(this->testShape);
 }
 
-void Game::DrawUIContext() {
+void Game::DrawUIContext(sf::RenderWindow& win) {
 
 }
