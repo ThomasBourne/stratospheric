@@ -20,7 +20,7 @@ namespace game {
             // Public functions
         public:
             SplashScreen(sf::Font&, sf::Texture&);
-            void Reload();
+            void Reload(sf::View&, sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
@@ -47,7 +47,7 @@ namespace game {
             // Public functions
         public:
             Game(sf::Texture&);
-            void Reload();
+            void Reload(sf::View&, sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
@@ -64,7 +64,7 @@ namespace game {
             // Public functions
         public:
             Settings(sf::RenderWindow&, sf::Texture&, Contexts&);
-            void Reload();
+            void Reload(sf::View&, sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();

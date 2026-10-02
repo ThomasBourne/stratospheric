@@ -9,7 +9,7 @@ namespace engine {
         // Public functions
     public:
         Context();
-        virtual void Reload();
+        virtual void Reload(sf::View&, sf::View&);
         virtual bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
         virtual void Physics();
         virtual void PhysicsUI();

@@ -3,7 +3,7 @@
 #include <algorithm>
 
 const std::string utility::windowName{ "Hello Window!" };
-sf::Vector2u utility::windowSize{ 1920U, 1080U };
+const sf::Vector2u utility::defaultWindowSize{ 1920U, 1080U };
 unsigned int utility::stepRate{ 200 };
 
 std::string utility::assets::assetFolderPath{ "/assets/" };
@@ -18,4 +18,14 @@ std::string utility::GetCWD() {
     // In Windows, current_path uses \ for folder structure, remove these for SFML
     std::replace(cwd.begin(), cwd.end(), '\\', '/');
     return cwd;
+}
+
+void utility::logic::ResizeSpriteToWin(sf::Sprite& sprite, sf::View& view) {
+    sprite.setScale(sf::Vector2f(1.f, 1.f));
+    sprite.setScale(
+        sf::Vector2f(
+            view.getSize().x / sprite.getGlobalBounds().size.x,
+            view.getSize().y / sprite.getGlobalBounds().size.y
+        )
+    );
 }

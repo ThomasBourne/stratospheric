@@ -1,7 +1,7 @@
 #include "context.hpp"
 
 engine::Context::Context() = default;
-void engine::Context::Reload() { }
+void engine::Context::Reload(sf::View&, sf::View&) { }
 bool engine::Context::Poll(const std::optional<sf::Event>&, sf::RenderWindow& event, void* nextContext) { return false; }
 void engine::Context::Physics() { }
 void engine::Context::PhysicsUI() { }

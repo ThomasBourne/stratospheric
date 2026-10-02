@@ -2,7 +2,7 @@
 #define UTILITY_UTILITY_HPP
 
 #include <string>
-#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 #include <filesystem>
 
 // Error codes
@@ -17,8 +17,7 @@
 
 namespace utility {
     extern const std::string windowName;
-    extern sf::Vector2u windowSize;
-    extern sf::Vector2u windowSize;
+    extern const sf::Vector2u defaultWindowSize;
     extern unsigned int stepRate;
 
     namespace assets {
@@ -31,6 +30,10 @@ namespace utility {
     extern const int tilemapDefinition;
 
     std::string GetCWD();
+
+    namespace logic {
+        void ResizeSpriteToWin(sf::Sprite&, sf::View&);
+    }
 }
 
 #endif

@@ -20,7 +20,7 @@ Settings::Settings(
         this->transparency.setPosition(sf::Vector2f(0.f, 0.f));
     }
 
-void Settings::Reload() {
+void Settings::Reload(sf::View& viewGame, sf::View& viewUI) {
     (void)this->captureTexture.resize(
         sf::Vector2u(
             (unsigned int)win.getView().getSize().x,
@@ -49,7 +49,8 @@ void Settings::PhysicsUI() {
 }
 
 void Settings::ResizeUI(sf::View& viewUI) {
-
+    utility::logic::ResizeSpriteToWin(this->capture, viewUI);
+    this->transparency.setSize(viewUI.getSize());
 }
 
 void Settings::DrawContext(sf::RenderWindow& win) { }

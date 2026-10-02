@@ -25,7 +25,9 @@ g::Contexts selectedContext{ g::Contexts::SplashScreen };
 g::Contexts nextContext{ selectedContext };
 
 void ChangeCurrentContext(
-	ContextList_t& contexts
+	ContextList_t& contexts,
+	sf::View& viewGame,
+	sf::View& viewUI
 ) {
 	previousContext = selectedContext;
 	// TODO: Add Context::Unload() function
@@ -34,7 +36,7 @@ void ChangeCurrentContext(
 		exit(0);
 	}
 	selectedContext = nextContext;
-	contexts[selectedContext]->Reload();
+	contexts[selectedContext]->Reload(viewGame, viewUI);
 }
 
 int main() {
@@ -42,7 +44,7 @@ int main() {
 	sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
 
 	// Initialise Render components
-	sf::RenderWindow window( sf::VideoMode( util::windowSize ), util::windowName );
+	sf::RenderWindow window( sf::VideoMode( util::defaultWindowSize ), util::windowName );
 	window.setFramerateLimit(util::stepRate);
 
 	// Load all textures
@@ -63,15 +65,15 @@ int main() {
 	};
 
 	sf::View viewGame{ window.getView() };
-	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::windowSize) };
+	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::defaultWindowSize) };
 
 	// TODO: Find a nice way to remove this and go straight to reload below
-	contexts[selectedContext]->Reload();
+	contexts[selectedContext]->Reload(viewGame, viewUI);
 
 	// Step loop
 	while (window.isOpen()) {
 		if (selectedContext != nextContext) {
-			ChangeCurrentContext(contexts);
+			ChangeCurrentContext(contexts, viewGame, viewUI);
 		}
 
 		// System polls
@@ -102,7 +104,7 @@ int main() {
 				nextContext = selectedContext == g::Contexts::SplashScreen ?
 					g::Contexts::Game :
 					g::Contexts::SplashScreen;
-				ChangeCurrentContext(contexts);
+				ChangeCurrentContext(contexts, viewGame, viewUI);
 			}
 			// Let current context handle poll
 			(void)contexts[selectedContext]->Poll(event, window, &nextContext);

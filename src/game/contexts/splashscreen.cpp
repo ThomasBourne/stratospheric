@@ -17,15 +17,9 @@ SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : e
         };
     }
 
-void SplashScreen::Reload() {
-    this->splashImage.setPosition({0.f, 0.f});;
-    this->splashImage.setScale({1, 1});
-    this->splashImage.setScale(
-        sf::Vector2f(
-            utility::windowSize.x / this->splashImage.getGlobalBounds().size.x,
-            utility::windowSize.y / this->splashImage.getGlobalBounds().size.y
-        )
-    );
+void SplashScreen::Reload(sf::View& viewGame, sf::View& viewUI) {
+    this->splashImage.setPosition({0.f, 0.f});
+    utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
     for (int i = 0; i < this->actionButtons.size(); i++) {
         this->actionButtons[i].displayText.setPosition(
@@ -60,13 +54,7 @@ void SplashScreen::PhysicsUI() {
 }
 
 void SplashScreen::ResizeUI(sf::View& viewUI) {
-    this->splashImage.setScale(sf::Vector2f(1.f, 1.f));
-    this->splashImage.setScale(
-        sf::Vector2f(
-            viewUI.getSize().x / this->splashImage.getGlobalBounds().size.x,
-            viewUI.getSize().y / this->splashImage.getGlobalBounds().size.y
-        )
-    );
+    utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
     for (size_t i = 0; i < this->actionButtons.size(); i++) {
         this->actionButtons[i].displayText.setPosition(
