@@ -3,8 +3,6 @@
 
 #include "SFML/System/Vector2.hpp"
 
-#include <iostream>
-
 using namespace game::contexts;
 
 Settings::Settings(
