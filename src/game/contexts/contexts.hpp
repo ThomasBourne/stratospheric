@@ -6,6 +6,7 @@
 
 // Local Imports
 #include "../../engine/context/context.hpp"
+#include "../../engine/settings/settings.hpp"
 
 namespace game {
     enum class Contexts {
@@ -63,7 +64,7 @@ namespace game {
         class Settings : public engine::Context {
             // Public functions
         public:
-            Settings(sf::RenderWindow&, sf::Texture&, Contexts&);
+            Settings(sf::RenderWindow&, sf::Texture&, Contexts&, engine::Settings&);
             void Reload(sf::View&, sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
@@ -76,6 +77,7 @@ namespace game {
         private:
             sf::RenderWindow& win;
             Contexts& previousContext;
+            engine::Settings& configRef;
             // Background freeze frame
             sf::Texture& captureTexture;
             sf::Sprite capture;

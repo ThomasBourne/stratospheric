@@ -6,7 +6,9 @@
 #include "utility/utility.hpp" // util:: variables
 
 // Engine Classes
-#include "engine/context/context.hpp" // Window context framework
+#include "engine/context/context.hpp" // Window context framework for typing
+#include "engine/settings/settings.hpp" // Settings file object manager
+#include "engine/render_utility/fpsdisplay.hpp" // FPS display object
 
 // Game Classes
 #include "game/contexts/contexts.hpp" // Window context classes
@@ -43,6 +45,13 @@ int main() {
 	// Load all fonts
 	sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
 
+	// Load settings config
+	engine::Settings settings{ defaultFont };
+	const util::StratErrorCodes settingsSuccess = settings.LoadFromFile(ASSET_FILE(util::settings::settingsFile));
+	if (settingsSuccess != util::StratErrorCodes::OK) {
+		exit((int)settingsSuccess);
+	}
+
 	// Initialise Render components
 	sf::RenderWindow window( sf::VideoMode( util::defaultWindowSize ), util::windowName );
 	window.setFramerateLimit(util::stepRate);
@@ -55,7 +64,7 @@ int main() {
 	// Initialise Contexts
 	g::contexts::SplashScreen contextSplashScreen{ defaultFont, splashScreenTexture };
 	g::contexts::Game contextGame{ tilemapTexture };
-	g::contexts::Settings contextSettings{ window, screenshotTexture, previousContext };
+	g::contexts::Settings contextSettings{ window, screenshotTexture, previousContext, settings };
 
 	// Map Contexts
 	ContextList_t contexts {
@@ -64,8 +73,12 @@ int main() {
 		std::make_pair(g::Contexts::Settings, &contextSettings),
 	};
 
+	// Create views
 	sf::View viewGame{ window.getView() };
 	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::defaultWindowSize) };
+
+	// Create FPS tracking object
+	engine::FPSCounter fpsCounter{ defaultFont };
 
 	// TODO: Find a nice way to remove this and go straight to reload below
 	contexts[selectedContext]->Reload(viewGame, viewUI);
@@ -117,12 +130,19 @@ int main() {
 		window.setView(viewUI);
 		contexts[selectedContext]->PhysicsUI();
 
+		// Update FPS step (if requested)
+		if (settings.fpsEnabled)
+			fpsCounter.UpdateFPSStep();
+
+		// Rasterise current context
 		window.clear();
 		window.setView(viewGame);
 		contexts[selectedContext]->DrawContext(window);
 		viewGame = window.getView();
 		window.setView(viewUI);
 		contexts[selectedContext]->DrawUIContext(window);
+		if (settings.fpsEnabled)
+			fpsCounter.DrawFPS(window);
 		window.display();
 	}
 }

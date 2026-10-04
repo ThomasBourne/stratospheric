@@ -24,6 +24,9 @@ add_executable(
     src/game/contexts/settings.cpp
     
     src/engine/context/context.cpp
+    src/engine/settings/settings.cpp
+    src/engine/settings/value.cpp
+    src/engine/render_utility/fpsdisplay.cpp
 )
 target_compile_features(stratospheric PRIVATE cxx_std_23)
 target_link_libraries(stratospheric PRIVATE SFML::Graphics)

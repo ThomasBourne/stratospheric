@@ -4,7 +4,8 @@
 
 const std::string utility::windowName{ "Hello Window!" };
 const sf::Vector2u utility::defaultWindowSize{ 1920U, 1080U };
-unsigned int utility::stepRate{ 200 };
+const unsigned int utility::stepRate{ 200 };
+const unsigned int utility::frameStepInfoUpdate{ 200 };
 
 std::string utility::assets::assetFolderPath{ "/assets/" };
 const std::string utility::assets::splashScreen{ "splash_screen.png" };
@@ -12,6 +13,11 @@ const std::string utility::assets::tilemap{ "tilemap.png" };
 const std::string utility::assets::defaultFont{ "fc.ttf" };
 
 const int utility::tilemapDefinition{ 100 };
+
+const std::string utility::settings::settingsFile = "settings.strat";
+const std::string utility::settings::compatibleConfigVersion = "0.0.1";
+const std::string utility::settings::compatibleLevelVersion = "0.0.1";
+const char utility::settings::globalDelimiter = ',';
 
 std::string utility::GetCWD() {
     std::string cwd = std::filesystem::current_path().string();

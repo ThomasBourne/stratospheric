@@ -18,7 +18,8 @@
 namespace utility {
     extern const std::string windowName;
     extern const sf::Vector2u defaultWindowSize;
-    extern unsigned int stepRate;
+    extern const unsigned int stepRate;
+    extern const unsigned int frameStepInfoUpdate;
 
     namespace assets {
         extern std::string assetFolderPath;
@@ -29,11 +30,31 @@ namespace utility {
 
     extern const int tilemapDefinition;
 
+    namespace settings {
+        extern const std::string settingsFile;
+        extern const std::string compatibleConfigVersion;
+        extern const std::string compatibleLevelVersion;
+        extern const char globalDelimiter;
+    }
+
     std::string GetCWD();
 
     namespace logic {
         void ResizeSpriteToWin(sf::Sprite&, sf::View&);
     }
+
+    enum class StratErrorCodes {
+        // 0 No Error
+        OK=0,
+        // 1XX File Error Codes
+            // 10X File Read Errors
+        FileLoadFailed = 100,
+        AssetFileLoadFailed = 101,
+        SettingsFileLoadFailed = 102,
+            // 11X File Write Errors
+        fileWriteFailed = 110,
+        SettingsileWriteFailed = 111
+    };
 }
 
 #endif
