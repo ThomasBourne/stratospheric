@@ -21,11 +21,11 @@ namespace game {
             // Public functions
         public:
             SplashScreen(sf::Font&, sf::Texture&);
-            void Reload(sf::View&, sf::View&);
+            void Reload(const sf::View&, const sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(sf::View&);
+            void ResizeUI(const sf::View&);
             void DrawContext(sf::RenderWindow&);
             void DrawUIContext(sf::RenderWindow&);
 
@@ -48,11 +48,11 @@ namespace game {
             // Public functions
         public:
             Game(sf::Texture&);
-            void Reload(sf::View&, sf::View&);
+            void Reload(const sf::View&, const sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(sf::View&);
+            void ResizeUI(const sf::View&);
             void DrawContext(sf::RenderWindow&);
             void DrawUIContext(sf::RenderWindow&);
 
@@ -65,11 +65,11 @@ namespace game {
             // Public functions
         public:
             Settings(sf::RenderWindow&, sf::Texture&, Contexts&, engine::Settings&);
-            void Reload(sf::View&, sf::View&);
+            void Reload(const sf::View&, const sf::View&);
             bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(sf::View&);
+            void ResizeUI(const sf::View&);
             void DrawContext(sf::RenderWindow&);
             void DrawUIContext(sf::RenderWindow&);
 

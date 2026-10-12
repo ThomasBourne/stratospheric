@@ -22,13 +22,8 @@ Settings::Settings(
         this->transparency.setPosition(sf::Vector2f(0.f, 0.f));
     }
 
-void Settings::Reload(sf::View& viewGame, sf::View& viewUI) {
-    (void)this->captureTexture.resize(
-        sf::Vector2u(
-            (unsigned int)win.getView().getSize().x,
-            (unsigned int)win.getView().getSize().y
-        )
-    );
+void Settings::Reload(const sf::View& viewGame, const sf::View& viewUI) {
+    (void)this->captureTexture.resize(win.getSize());
     this->captureTexture.update(win);
     this->capture.setPosition(sf::Vector2f(0.f, 0.f));
 }
@@ -49,9 +44,22 @@ bool Settings::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win
     ) {
         // Check for press on a config
         engine::Settings::Value* selectedValue = this->configRef.GetSelectedValue(win.mapPixelToCoords(sf::Mouse::getPosition(win), win.getView()));
-        if (selectedValue != nullptr) {
+        
+        if (selectedValue != nullptr && selectedValue == this->configRef.GetToggledValueRef()) {
+            // TODO: Figure out a modular way to determine if the fullscreen button has been triggered and perform an associated action
             selectedValue->ChangeValue();
+            // Check for changes from the "->ChangeValue" trigger
+            // Has fullscreen been toggled
+            if (this->configRef.fullscreenEnabled != utility::_window::isWindowFullscreen) {
+                utility::ReloadWindow(win, this->configRef.fullscreenEnabled);
+                // TODO: This does not work, I think each context needs a ref to both View instances & pass the UI one in
+                this->ResizeUI(win.getView());
+            }
         }
+        
+        this->configRef.SetToggleValue(selectedValue);
+        
+        return false;
     }
     return false;
 }
@@ -62,7 +70,7 @@ void Settings::PhysicsUI() {
 
 }
 
-void Settings::ResizeUI(sf::View& viewUI) {
+void Settings::ResizeUI(const sf::View& viewUI) {
     utility::logic::ResizeSpriteToWin(this->capture, viewUI);
     this->transparency.setSize(viewUI.getSize());
 }

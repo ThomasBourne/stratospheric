@@ -17,7 +17,7 @@ SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : e
         };
     }
 
-void SplashScreen::Reload(sf::View& viewGame, sf::View& viewUI) {
+void SplashScreen::Reload(const sf::View& viewGame, const sf::View& viewUI) {
     this->splashImage.setPosition({0.f, 0.f});
     utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
@@ -33,8 +33,8 @@ void SplashScreen::Reload(sf::View& viewGame, sf::View& viewUI) {
 
 bool SplashScreen::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
     if (
-        event->is<sf::Event::MouseButtonPressed>() &&
-        event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left
+        event->is<sf::Event::MouseButtonReleased>() &&
+        event->getIf<sf::Event::MouseButtonReleased>()->button == sf::Mouse::Button::Left
     ) {
         for (size_t i = 0; i < this->actionButtons.size(); i++) {
             if (this->actionButtons[i].displayText.getGlobalBounds().contains(sf::Vector2f(win.mapPixelToCoords(sf::Mouse::getPosition(win), win.getView())))) {
@@ -53,7 +53,7 @@ void SplashScreen::PhysicsUI() {
 
 }
 
-void SplashScreen::ResizeUI(sf::View& viewUI) {
+void SplashScreen::ResizeUI(const sf::View& viewUI) {
     utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
     for (size_t i = 0; i < this->actionButtons.size(); i++) {

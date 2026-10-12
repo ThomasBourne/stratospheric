@@ -6,6 +6,7 @@ const std::string utility::windowName{ "Hello Window!" };
 const sf::Vector2u utility::defaultWindowSize{ 1920U, 1080U };
 const unsigned int utility::stepRate{ 200 };
 const unsigned int utility::frameStepInfoUpdate{ 200 };
+bool utility::_window::isWindowFullscreen{ false }; // False by default, see todo
 
 std::string utility::assets::assetFolderPath{ "/assets/" };
 const std::string utility::assets::splashScreen{ "splash_screen.png" };
@@ -26,7 +27,39 @@ std::string utility::GetCWD() {
     return cwd;
 }
 
-void utility::logic::ResizeSpriteToWin(sf::Sprite& sprite, sf::View& view) {
+void utility::ReloadWindow(sf::RenderWindow& win, bool fullscreen) {
+    win.create(
+        utility::GetCorrectVideoMode(fullscreen),
+		utility::windowName,
+		sf::Style::Default,
+		utility::GetCorrectWinState(fullscreen)
+    );
+	win.setVerticalSyncEnabled(false);
+	win.setFramerateLimit(utility::stepRate);
+    utility::_window::isWindowFullscreen = fullscreen;
+}
+
+sf::VideoMode utility::GetCorrectVideoMode(bool isRequestingFullscreen) {
+    if (isRequestingFullscreen) {
+        return sf::VideoMode( sf::Vector2u(sf::VideoMode::getDesktopMode().size) );
+    }
+    return sf::VideoMode( utility::defaultWindowSize );
+}
+
+sf::State utility::GetCorrectWinState(bool isRequestingFullscreen) {
+    return isRequestingFullscreen ? sf::State::Fullscreen : sf::State::Windowed;
+}
+
+utility::StratErrorCodes utility::SafeExit(int exitCode, StratErrorCodes (*WriteConfigToFile)(const std::string&)) {
+    const StratErrorCodes configWrite = WriteConfigToFile(ASSET_FILE(utility::settings::settingsFile));
+    bool safeExitAchieved = (
+        configWrite == StratErrorCodes::OK
+    );
+    int finalExitCode = exitCode != 0 ? exitCode : (int)!safeExitAchieved;
+    exit(finalExitCode);
+}
+
+void utility::logic::ResizeSpriteToWin(sf::Sprite& sprite, const sf::View& view) {
     sprite.setScale(sf::Vector2f(1.f, 1.f));
     sprite.setScale(
         sf::Vector2f(

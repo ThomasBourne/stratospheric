@@ -10,7 +10,7 @@ Game::Game(sf::Texture& tilemap) : engine::Context(),
     tileExample(tilemap)
     { }
 
-void Game::Reload(sf::View& viewGame, sf::View& viewUI) {
+void Game::Reload(const sf::View& viewGame, const sf::View& viewUI) {
     tileExample.setPosition(sf::Vector2f(800.f, 200.f));
     tileExample.setTextureRect({{0, 0}, {utility::tilemapDefinition, utility::tilemapDefinition}});
 }
@@ -27,7 +27,7 @@ void Game::PhysicsUI() {
 
 }
 
-void Game::ResizeUI(sf::View&) {
+void Game::ResizeUI(const sf::View&) {
 
 }
 

@@ -16,10 +16,27 @@
 #define ASSET_FILE(asset) std::string(utility::GetCWD() + utility::assets::assetFolderPath + asset)
 
 namespace utility {
+    enum class StratErrorCodes {
+        // 0 No Error
+        OK=0,
+        // 1XX File Error Codes
+            // 10X File Read Errors
+        FileLoadFailed = 100,
+        AssetFileLoadFailed = 101,
+        SettingsFileLoadFailed = 102,
+            // 11X File Write Errors
+        fileWriteFailed = 110,
+        SettingsileWriteFailed = 111
+    };
+
     extern const std::string windowName;
     extern const sf::Vector2u defaultWindowSize;
     extern const unsigned int stepRate;
     extern const unsigned int frameStepInfoUpdate;
+
+    namespace _window {
+        extern bool isWindowFullscreen; // TODO: This is dangerous as external code can rewrite, change later to make this protected somehow
+    }
 
     namespace assets {
         extern std::string assetFolderPath;
@@ -39,22 +56,16 @@ namespace utility {
 
     std::string GetCWD();
 
-    namespace logic {
-        void ResizeSpriteToWin(sf::Sprite&, sf::View&);
-    }
+    // TODO: Eventually enable custom resolution
+    void ReloadWindow(sf::RenderWindow&, bool);
+    sf::VideoMode GetCorrectVideoMode(bool isRequestingFullscreen);
+    sf::State GetCorrectWinState(bool isRequestingFullscreen);
 
-    enum class StratErrorCodes {
-        // 0 No Error
-        OK=0,
-        // 1XX File Error Codes
-            // 10X File Read Errors
-        FileLoadFailed = 100,
-        AssetFileLoadFailed = 101,
-        SettingsFileLoadFailed = 102,
-            // 11X File Write Errors
-        fileWriteFailed = 110,
-        SettingsileWriteFailed = 111
-    };
+    StratErrorCodes SafeExit(int exitCode, StratErrorCodes (*WriteConfigToFile)(const std::string&));
+
+    namespace logic {
+        void ResizeSpriteToWin(sf::Sprite&, const sf::View&);
+    }
 }
 
 #endif

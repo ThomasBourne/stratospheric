@@ -9,9 +9,7 @@ Settings::Value::Value(sf::Font& font) :
     renderedOutput(font),
     lText(""),
     rText("")
-    {
-        renderedOutput.setPosition({ 100.f, 50.f });
-    }
+    { }
 
 void Settings::Value::SetLText(const std::string text) {
     this->lText = text;

@@ -26,6 +26,14 @@ g::Contexts previousContext{ g::Contexts::Terminate };
 g::Contexts selectedContext{ g::Contexts::SplashScreen };
 g::Contexts nextContext{ selectedContext };
 
+// Assets
+// Load all fonts
+sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
+// Load settings config
+e::Settings settings{ defaultFont };
+// TODO: Change how this is passed through so the wrapper function can be deleted
+util::StratErrorCodes SettingsFileWriteWrapper(const std::string& settingsFile) { return settings.WriteToFile(settingsFile); }
+
 void ChangeCurrentContext(
 	ContextList_t& contexts,
 	sf::View& viewGame,
@@ -35,26 +43,22 @@ void ChangeCurrentContext(
 	// TODO: Add Context::Unload() function
 	// contexts[*currentContext]->Unload();
 	if (nextContext == g::Contexts::Terminate) {
-		exit(0);
+		util::SafeExit(0, SettingsFileWriteWrapper);
 	}
 	selectedContext = nextContext;
 	contexts[selectedContext]->Reload(viewGame, viewUI);
 }
 
 int main() {
-	// Load all fonts
-	sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
-
-	// Load settings config
-	engine::Settings settings{ defaultFont };
 	const util::StratErrorCodes settingsSuccess = settings.LoadFromFile(ASSET_FILE(util::settings::settingsFile));
 	if (settingsSuccess != util::StratErrorCodes::OK) {
 		exit((int)settingsSuccess);
 	}
 
 	// Initialise Render components
-	sf::RenderWindow window( sf::VideoMode( util::defaultWindowSize ), util::windowName );
-	window.setFramerateLimit(util::stepRate);
+	sf::RenderWindow window;
+	util::ReloadWindow(window, settings.fullscreenEnabled);
+	util::_window::isWindowFullscreen = settings.fullscreenEnabled;
 
 	// Load all textures
 	sf::Texture screenshotTexture{ window.getSize() };
@@ -78,7 +82,7 @@ int main() {
 	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::defaultWindowSize) };
 
 	// Create FPS tracking object
-	engine::FPSCounter fpsCounter{ defaultFont };
+	e::FPSCounter fpsCounter{ defaultFont };
 
 	// TODO: Find a nice way to remove this and go straight to reload below
 	contexts[selectedContext]->Reload(viewGame, viewUI);
@@ -92,8 +96,10 @@ int main() {
 		// System polls
 		while (const std::optional event = window.pollEvent()) {
 			// Exit application
-			if ( event->is<sf::Event::Closed>() )
+			if ( event->is<sf::Event::Closed>() ) {
 				window.close();
+				util::SafeExit(0, SettingsFileWriteWrapper);
+			}
 			else if (event->is<sf::Event::Resized>()) {
 				// Resize views
 				viewGame.setSize((sf::Vector2f)window.getSize());
@@ -131,6 +137,7 @@ int main() {
 		contexts[selectedContext]->PhysicsUI();
 
 		// Update FPS step (if requested)
+		// TODO: Change this to draw every frame, but move it off screen on and off toggle
 		if (settings.fpsEnabled)
 			fpsCounter.UpdateFPSStep();
 

@@ -33,6 +33,7 @@ namespace engine {
         // Public Members
     public:
         bool fpsEnabled;
+        bool fullscreenEnabled;
 
         // Public Functions
     public:
@@ -44,10 +45,16 @@ namespace engine {
 
         void DrawBooleanValues(sf::RenderWindow&);
 
+        void SetToggleValue(Value*);
+
+        const Value * const GetToggledValueRef();
+
         // Private Members
     private:
         sf::Font& fontRef;
         std::vector<ToggleValue> booleanValues;
+        Value* selectedValue;
+        sf::RectangleShape selectedHighlight;
 
         // Private Functions
     private:
