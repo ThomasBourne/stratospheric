@@ -8,14 +8,20 @@ namespace engine {
     class Context {
         // Public functions
     public:
-        Context();
-        virtual void Reload(const sf::View&, const sf::View&);
-        virtual bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
+        Context(sf::RenderWindow&, const sf::View&, const sf::View&); // TODO: 1st view should not be const for game context bus assess later
+        virtual void Reload();
+        virtual bool Poll(const std::optional<sf::Event>&, void*);
         virtual void Physics();
         virtual void PhysicsUI();
-        virtual void ResizeUI(const sf::View&);
-        virtual void DrawContext(sf::RenderWindow&);
-        virtual void DrawUIContext(sf::RenderWindow&);
+        virtual void ResizeUI();
+        virtual void DrawContext();
+        virtual void DrawUIContext();
+
+        // Private members
+    protected:
+        sf::RenderWindow& winRef;
+        const sf::View& viewGame;
+        const sf::View& viewUI;
     };
 }
 

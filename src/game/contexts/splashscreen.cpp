@@ -5,7 +5,8 @@
 
 using namespace game::contexts;
 
-SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : engine::Context(),
+SplashScreen::SplashScreen(THE_BIG_THREE_WITH_TEXT, sf::Font& sharedFont, sf::Texture& splashTexture) :
+    engine::Context(winRef, viewGame, viewUI),
     sharedFont(sharedFont),
     splashImage(splashTexture)
     {
@@ -17,7 +18,7 @@ SplashScreen::SplashScreen(sf::Font& sharedFont, sf::Texture& splashTexture) : e
         };
     }
 
-void SplashScreen::Reload(const sf::View& viewGame, const sf::View& viewUI) {
+void SplashScreen::Reload() {
     this->splashImage.setPosition({0.f, 0.f});
     utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
@@ -31,13 +32,13 @@ void SplashScreen::Reload(const sf::View& viewGame, const sf::View& viewUI) {
     }
 }
 
-bool SplashScreen::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
+bool SplashScreen::Poll(const std::optional<sf::Event>& event, void* nextContext) {
     if (
         event->is<sf::Event::MouseButtonReleased>() &&
         event->getIf<sf::Event::MouseButtonReleased>()->button == sf::Mouse::Button::Left
     ) {
         for (size_t i = 0; i < this->actionButtons.size(); i++) {
-            if (this->actionButtons[i].displayText.getGlobalBounds().contains(sf::Vector2f(win.mapPixelToCoords(sf::Mouse::getPosition(win), win.getView())))) {
+            if (this->actionButtons[i].displayText.getGlobalBounds().contains(sf::Vector2f(winRef.mapPixelToCoords(sf::Mouse::getPosition(winRef), winRef.getView())))) {
                 *((Contexts*)nextContext) = this->actionButtons[i].action;
                 return true;
             }
@@ -53,7 +54,7 @@ void SplashScreen::PhysicsUI() {
 
 }
 
-void SplashScreen::ResizeUI(const sf::View& viewUI) {
+void SplashScreen::ResizeUI() {
     utility::logic::ResizeSpriteToWin(this->splashImage, viewUI);
 
     for (size_t i = 0; i < this->actionButtons.size(); i++) {
@@ -66,11 +67,11 @@ void SplashScreen::ResizeUI(const sf::View& viewUI) {
     }
 }
 
-void SplashScreen::DrawContext(sf::RenderWindow& win) { }
+void SplashScreen::DrawContext() { }
 
-void SplashScreen::DrawUIContext(sf::RenderWindow& win) {
-    win.draw(this->splashImage);
+void SplashScreen::DrawUIContext() {
+    winRef.draw(this->splashImage);
     for (const auto& button : this->actionButtons) {
-        win.draw(button.displayText);
+        winRef.draw(button.displayText);
     }
 }

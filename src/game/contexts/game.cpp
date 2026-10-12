@@ -6,16 +6,17 @@
 
 using namespace game::contexts;
 
-Game::Game(sf::Texture& tilemap) : engine::Context(),
+Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap) :
+    engine::Context(winRef, viewGame, viewUI),
     tileExample(tilemap)
     { }
 
-void Game::Reload(const sf::View& viewGame, const sf::View& viewUI) {
+void Game::Reload() {
     tileExample.setPosition(sf::Vector2f(800.f, 200.f));
     tileExample.setTextureRect({{0, 0}, {utility::tilemapDefinition, utility::tilemapDefinition}});
 }
 
-bool Game::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
+bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
     return false;
 }
 
@@ -27,14 +28,14 @@ void Game::PhysicsUI() {
 
 }
 
-void Game::ResizeUI(const sf::View&) {
+void Game::ResizeUI() {
 
 }
 
-void Game::DrawContext(sf::RenderWindow& win) {
-    win.draw(this->tileExample);
+void Game::DrawContext() {
+    winRef.draw(this->tileExample);
 }
 
-void Game::DrawUIContext(sf::RenderWindow& win) {
+void Game::DrawUIContext() {
 
 }

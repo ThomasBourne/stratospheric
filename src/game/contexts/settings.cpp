@@ -6,15 +6,15 @@
 using namespace game::contexts;
 
 Settings::Settings(
-    sf::RenderWindow& win,
+    THE_BIG_THREE_WITH_TEXT,
     sf::Texture& screenshotTexture,
     Contexts& previousContext,
     engine::Settings& settings
-    ) : engine::Context(),
-    win(win),
+    ) :
+    engine::Context(winRef, viewGame, viewUI),
     captureTexture(screenshotTexture),
     capture(captureTexture),
-    transparency((sf::Vector2f)win.getSize()),
+    transparency((sf::Vector2f)winRef.getSize()),
     previousContext(previousContext),
     configRef(settings)
     {
@@ -22,13 +22,13 @@ Settings::Settings(
         this->transparency.setPosition(sf::Vector2f(0.f, 0.f));
     }
 
-void Settings::Reload(const sf::View& viewGame, const sf::View& viewUI) {
-    (void)this->captureTexture.resize(win.getSize());
-    this->captureTexture.update(win);
+void Settings::Reload() {
+    (void)this->captureTexture.resize(winRef.getSize());
+    this->captureTexture.update(winRef);
     this->capture.setPosition(sf::Vector2f(0.f, 0.f));
 }
 
-bool Settings::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win, void* nextContext) {
+bool Settings::Poll(const std::optional<sf::Event>& event,void* nextContext) {
     // Return to previous context
     if (
         event->is<sf::Event::KeyPressed>() &&
@@ -43,7 +43,7 @@ bool Settings::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win
         event->getIf<sf::Event::MouseButtonReleased>()->button == sf::Mouse::Button::Left
     ) {
         // Check for press on a config
-        engine::Settings::Value* selectedValue = this->configRef.GetSelectedValue(win.mapPixelToCoords(sf::Mouse::getPosition(win), win.getView()));
+        engine::Settings::Value* selectedValue = this->configRef.GetSelectedValue(winRef.mapPixelToCoords(sf::Mouse::getPosition(winRef), winRef.getView()));
         
         if (selectedValue != nullptr && selectedValue == this->configRef.GetToggledValueRef()) {
             // TODO: Figure out a modular way to determine if the fullscreen button has been triggered and perform an associated action
@@ -51,9 +51,8 @@ bool Settings::Poll(const std::optional<sf::Event>& event, sf::RenderWindow& win
             // Check for changes from the "->ChangeValue" trigger
             // Has fullscreen been toggled
             if (this->configRef.fullscreenEnabled != utility::_window::isWindowFullscreen) {
-                utility::ReloadWindow(win, this->configRef.fullscreenEnabled);
-                // TODO: This does not work, I think each context needs a ref to both View instances & pass the UI one in
-                this->ResizeUI(win.getView());
+                utility::ReloadWindow(winRef, this->configRef.fullscreenEnabled);
+                this->ResizeUI();
             }
         }
         
@@ -70,16 +69,17 @@ void Settings::PhysicsUI() {
 
 }
 
-void Settings::ResizeUI(const sf::View& viewUI) {
+void Settings::ResizeUI() {
+    // TODO: This does not work when fullscreen is toggled
     utility::logic::ResizeSpriteToWin(this->capture, viewUI);
     this->transparency.setSize(viewUI.getSize());
 }
 
-void Settings::DrawContext(sf::RenderWindow& win) { }
+void Settings::DrawContext() { }
 
-void Settings::DrawUIContext(sf::RenderWindow& win) {
-    win.draw(this->capture);
-    win.draw(this->transparency);
+void Settings::DrawUIContext() {
+    winRef.draw(this->capture);
+    winRef.draw(this->transparency);
 
-    this->configRef.DrawBooleanValues(win);
+    this->configRef.DrawBooleanValues(winRef);
 }

@@ -23,8 +23,8 @@ typedef std::map<g::Contexts, e::Context*> ContextList_t;
 
 // Context knowledge
 g::Contexts previousContext{ g::Contexts::Terminate };
-g::Contexts selectedContext{ g::Contexts::SplashScreen };
-g::Contexts nextContext{ selectedContext };
+g::Contexts selectedContext{ g::Contexts::Terminate };
+g::Contexts nextContext{ g::Contexts::SplashScreen };
 
 // Assets
 // Load all fonts
@@ -46,7 +46,7 @@ void ChangeCurrentContext(
 		util::SafeExit(0, SettingsFileWriteWrapper);
 	}
 	selectedContext = nextContext;
-	contexts[selectedContext]->Reload(viewGame, viewUI);
+	contexts[selectedContext]->Reload();
 }
 
 int main() {
@@ -60,15 +60,20 @@ int main() {
 	util::ReloadWindow(window, settings.fullscreenEnabled);
 	util::_window::isWindowFullscreen = settings.fullscreenEnabled;
 
+	// Create views
+	sf::View viewGame{ window.getView() };
+	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::defaultWindowSize) };
+
 	// Load all textures
 	sf::Texture screenshotTexture{ window.getSize() };
 	sf::Texture splashScreenTexture{ ASSET_FILE(util::assets::splashScreen) };
 	sf::Texture tilemapTexture{ ASSET_FILE(util::assets::tilemap) };
 
 	// Initialise Contexts
-	g::contexts::SplashScreen contextSplashScreen{ defaultFont, splashScreenTexture };
-	g::contexts::Game contextGame{ tilemapTexture };
-	g::contexts::Settings contextSettings{ window, screenshotTexture, previousContext, settings };
+	#define BIG_THREE_INIT window, viewGame, viewUI
+	g::contexts::SplashScreen contextSplashScreen{ BIG_THREE_INIT, defaultFont, splashScreenTexture };
+	g::contexts::Game contextGame{ BIG_THREE_INIT, tilemapTexture };
+	g::contexts::Settings contextSettings{ BIG_THREE_INIT, screenshotTexture, previousContext, settings };
 
 	// Map Contexts
 	ContextList_t contexts {
@@ -77,15 +82,8 @@ int main() {
 		std::make_pair(g::Contexts::Settings, &contextSettings),
 	};
 
-	// Create views
-	sf::View viewGame{ window.getView() };
-	sf::View viewUI{ sf::FloatRect({ 0.f, 0.f }, (sf::Vector2f)util::defaultWindowSize) };
-
 	// Create FPS tracking object
 	e::FPSCounter fpsCounter{ defaultFont };
-
-	// TODO: Find a nice way to remove this and go straight to reload below
-	contexts[selectedContext]->Reload(viewGame, viewUI);
 
 	// Step loop
 	while (window.isOpen()) {
@@ -113,7 +111,7 @@ int main() {
 				);
 				// While this resizes correctly, it does not move items calculated at 1920x1080 to new padding
 				// Call custom resize function for context to fix this issue
-				contexts[selectedContext]->ResizeUI(viewUI);
+				contexts[selectedContext]->ResizeUI();
 			}
 			// Custom Function
 			else if (
@@ -126,7 +124,7 @@ int main() {
 				ChangeCurrentContext(contexts, viewGame, viewUI);
 			}
 			// Let current context handle poll
-			(void)contexts[selectedContext]->Poll(event, window, &nextContext);
+			(void)contexts[selectedContext]->Poll(event, &nextContext);
 		}
 
 		// Perform physic steps
@@ -144,10 +142,10 @@ int main() {
 		// Rasterise current context
 		window.clear();
 		window.setView(viewGame);
-		contexts[selectedContext]->DrawContext(window);
+		contexts[selectedContext]->DrawContext();
 		viewGame = window.getView();
 		window.setView(viewUI);
-		contexts[selectedContext]->DrawUIContext(window);
+		contexts[selectedContext]->DrawUIContext();
 		if (settings.fpsEnabled)
 			fpsCounter.DrawFPS(window);
 		window.display();

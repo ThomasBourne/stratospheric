@@ -8,6 +8,9 @@
 #include "../../engine/context/context.hpp"
 #include "../../engine/settings/settings.hpp"
 
+#define THE_BIG_THREE sf::RenderWindow&, const sf::View&, const sf::View&
+#define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, const sf::View& viewGame, const sf::View& viewUI
+
 namespace game {
     enum class Contexts {
         SplashScreen = 0,
@@ -20,14 +23,14 @@ namespace game {
         class SplashScreen : public engine::Context {
             // Public functions
         public:
-            SplashScreen(sf::Font&, sf::Texture&);
-            void Reload(const sf::View&, const sf::View&);
-            bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
+            SplashScreen(THE_BIG_THREE, sf::Font&, sf::Texture&);
+            void Reload();
+            bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(const sf::View&);
-            void DrawContext(sf::RenderWindow&);
-            void DrawUIContext(sf::RenderWindow&);
+            void ResizeUI();
+            void DrawContext();
+            void DrawUIContext();
 
             // Private classes
         private:
@@ -47,14 +50,14 @@ namespace game {
         class Game : public engine::Context {
             // Public functions
         public:
-            Game(sf::Texture&);
-            void Reload(const sf::View&, const sf::View&);
-            bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
+            Game(THE_BIG_THREE, sf::Texture&);
+            void Reload();
+            bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(const sf::View&);
-            void DrawContext(sf::RenderWindow&);
-            void DrawUIContext(sf::RenderWindow&);
+            void ResizeUI();
+            void DrawContext();
+            void DrawUIContext();
 
             // Private members
         private:
@@ -64,18 +67,17 @@ namespace game {
         class Settings : public engine::Context {
             // Public functions
         public:
-            Settings(sf::RenderWindow&, sf::Texture&, Contexts&, engine::Settings&);
-            void Reload(const sf::View&, const sf::View&);
-            bool Poll(const std::optional<sf::Event>&, sf::RenderWindow&, void*);
+            Settings(THE_BIG_THREE,  sf::Texture&, Contexts&, engine::Settings&);
+            void Reload();
+            bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
             void PhysicsUI();
-            void ResizeUI(const sf::View&);
-            void DrawContext(sf::RenderWindow&);
-            void DrawUIContext(sf::RenderWindow&);
+            void ResizeUI();
+            void DrawContext();
+            void DrawUIContext();
 
             // Private members
         private:
-            sf::RenderWindow& win;
             Contexts& previousContext;
             engine::Settings& configRef;
             // Background freeze frame
