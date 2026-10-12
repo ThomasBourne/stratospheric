@@ -68,11 +68,12 @@ int main() {
 	sf::Texture screenshotTexture{ window.getSize() };
 	sf::Texture splashScreenTexture{ ASSET_FILE(util::assets::splashScreen) };
 	sf::Texture tilemapTexture{ ASSET_FILE(util::assets::tilemap) };
+	sf::Texture sheepTexture{ ASSET_FILE(util::assets::sheepTexture) };
 
 	// Initialise Contexts
 	#define BIG_THREE_INIT window, viewGame, viewUI
 	g::contexts::SplashScreen contextSplashScreen{ BIG_THREE_INIT, defaultFont, splashScreenTexture };
-	g::contexts::Game contextGame{ BIG_THREE_INIT, tilemapTexture };
+	g::contexts::Game contextGame{ BIG_THREE_INIT, tilemapTexture, sheepTexture };
 	g::contexts::Settings contextSettings{ BIG_THREE_INIT, screenshotTexture, previousContext, settings };
 
 	// Map Contexts

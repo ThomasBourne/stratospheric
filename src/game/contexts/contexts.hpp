@@ -7,6 +7,7 @@
 // Local Imports
 #include "../../engine/context/context.hpp"
 #include "../../engine/settings/settings.hpp"
+#include "../../engine/entity/entity.hpp" // TODO: REMOVE AS IT IS DEMO ENTITY
 
 #define THE_BIG_THREE sf::RenderWindow&, const sf::View&, const sf::View&
 #define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, const sf::View& viewGame, const sf::View& viewUI
@@ -50,7 +51,7 @@ namespace game {
         class Game : public engine::Context {
             // Public functions
         public:
-            Game(THE_BIG_THREE, sf::Texture&);
+            Game(THE_BIG_THREE, sf::Texture&, sf::Texture&);
             void Reload();
             bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
@@ -62,6 +63,7 @@ namespace game {
             // Private members
         private:
             sf::Sprite tileExample;
+            engine::Entity entity;
         };
 
         class Settings : public engine::Context {

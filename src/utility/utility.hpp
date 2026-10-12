@@ -43,6 +43,7 @@ namespace utility {
         extern const std::string splashScreen;
         extern const std::string tilemap;
         extern const std::string defaultFont;
+        extern const std::string sheepTexture;
     }
 
     extern const int tilemapDefinition;
@@ -52,6 +53,12 @@ namespace utility {
         extern const std::string compatibleConfigVersion;
         extern const std::string compatibleLevelVersion;
         extern const char globalDelimiter;
+    }
+
+    namespace animate {
+        namespace player {
+            extern const size_t framesPerAnimationFrame;
+        }
     }
 
     std::string GetCWD();

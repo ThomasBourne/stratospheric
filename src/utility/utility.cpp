@@ -12,13 +12,16 @@ std::string utility::assets::assetFolderPath{ "/assets/" };
 const std::string utility::assets::splashScreen{ "splash_screen.png" };
 const std::string utility::assets::tilemap{ "tilemap.png" };
 const std::string utility::assets::defaultFont{ "fc.ttf" };
+const std::string utility::assets::sheepTexture{ "sheep.png" };
 
 const int utility::tilemapDefinition{ 100 };
 
-const std::string utility::settings::settingsFile = "settings.strat";
-const std::string utility::settings::compatibleConfigVersion = "0.0.1";
-const std::string utility::settings::compatibleLevelVersion = "0.0.1";
-const char utility::settings::globalDelimiter = ',';
+const std::string utility::settings::settingsFile{ "settings.strat" };
+const std::string utility::settings::compatibleConfigVersion{ "0.0.1" };
+const std::string utility::settings::compatibleLevelVersion{ "0.0.1" };
+const char utility::settings::globalDelimiter{ ',' };
+
+const size_t utility::animate::player::framesPerAnimationFrame{ 25ULL };
 
 std::string utility::GetCWD() {
     std::string cwd = std::filesystem::current_path().string();
