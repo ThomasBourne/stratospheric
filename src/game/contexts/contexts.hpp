@@ -7,10 +7,11 @@
 // Local Imports
 #include "../../engine/context/context.hpp"
 #include "../../engine/settings/settings.hpp"
+#include "../../engine/tilemap/tilemap.hpp"
 #include "../../engine/entity/entity.hpp" // TODO: REMOVE AS IT IS DEMO ENTITY
 
-#define THE_BIG_THREE sf::RenderWindow&, const sf::View&, const sf::View&
-#define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, const sf::View& viewGame, const sf::View& viewUI
+#define THE_BIG_THREE sf::RenderWindow&, sf::View&, const sf::View&
+#define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, sf::View& viewGame, const sf::View& viewUI
 
 namespace game {
     enum class Contexts {
@@ -62,8 +63,9 @@ namespace game {
 
             // Private members
         private:
-            sf::Sprite tileExample;
+            sf::Sprite player;
             engine::Entity entity;
+            engine::Tilemap tilemap;
         };
 
         class Settings : public engine::Context {

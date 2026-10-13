@@ -5,13 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include <filesystem>
 
-// Error codes
-	/// SFML Errors
-#define ERROR_CODE_SFML_FAILED_FILE_READ 1001
-
-// SFML File Open Wrapper
-#define SFML_FILE_OPEN(load_file_command) if (!load_file_command) exit(ERROR_CODE_SFML_FAILED_FILE_READ)
-
 // Asset filepath
 #define ASSET_FILE(asset) std::string(utility::GetCWD() + utility::assets::assetFolderPath + asset)
 
@@ -24,9 +17,11 @@ namespace utility {
         FileLoadFailed = 100,
         AssetFileLoadFailed = 101,
         SettingsFileLoadFailed = 102,
+        TilemapFileLoadFailed = 103,
             // 11X File Write Errors
         fileWriteFailed = 110,
-        SettingsileWriteFailed = 111
+        SettingsileWriteFailed = 112,
+        TilemapWriteFailed = 113
     };
 
     extern const std::string windowName;
@@ -46,7 +41,12 @@ namespace utility {
         extern const std::string sheepTexture;
     }
 
-    extern const int tilemapDefinition;
+    namespace game {
+        extern const std::string tilemapFileName;
+        extern const int tilemapDefinition;
+        extern const sf::Vector2i tileSize;
+        extern const sf::Vector2<sf::Vector2f> viewBounds;
+    }
 
     namespace settings {
         extern const std::string settingsFile;

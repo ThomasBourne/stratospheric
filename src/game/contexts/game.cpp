@@ -8,13 +8,17 @@ using namespace game::contexts;
 
 Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap, sf::Texture& entityTexture) :
     engine::Context(winRef, viewGame, viewUI),
-    tileExample(tilemap),
-    entity(entityTexture, sf::Vector2f(50.f, 30.f), {std::make_pair<size_t, size_t>(0, 0),std::make_pair<size_t, size_t>(1, 2)})
-    { }
+    player(tilemap),
+    entity(entityTexture, sf::Vector2f(50.f, 30.f), {std::make_pair<size_t, size_t>(0, 0),std::make_pair<size_t, size_t>(1, 2)}),
+    tilemap(tilemap)
+    {
+        // TODO: Move this to reload & unload when unload is implemented
+        this->tilemap.LoadAndInitFromFile( ASSET_FILE(utility::game::tilemapFileName), player );
+    }
 
 void Game::Reload() {
-    tileExample.setPosition(sf::Vector2f(800.f, 200.f));
-    tileExample.setTextureRect({{0, 0}, {utility::tilemapDefinition, utility::tilemapDefinition}});
+    player.setPosition(sf::Vector2f(800.f, 200.f));
+    player.setTextureRect({{0, 0}, {utility::game::tilemapDefinition, utility::game::tilemapDefinition}});
 }
 
 bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
@@ -32,7 +36,35 @@ void Game::Physics() {
         -stepWeight * sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W)
     };
     
-    tileExample.move(cardinality);
+    player.move(cardinality);
+    
+    // Check if view needs shifting
+    // This is slightly unexpected behaviour with the latter checks, but its ok because its slightly quicker (probably)
+    sf::View& v = viewGame;
+    if (abs(player.getPosition().x) < abs(v.getCenter().x - utility::game::viewBounds.x.x)) {
+        v.move(sf::Vector2f(
+            player.getPosition().x - (abs(v.getCenter().x) - utility::game::viewBounds.x.x)
+        , 0.f));
+    }
+    else if (abs(player.getPosition().x) > abs(v.getCenter().x + utility::game::viewBounds.x.y)) {
+        v.move(sf::Vector2f(
+            player.getPosition().x - (abs(v.getCenter().x) + utility::game::viewBounds.x.y)
+            , 0.f));
+    }
+    if (abs(player.getPosition().y) < abs(v.getCenter().y - utility::game::viewBounds.y.x)) {
+        v.move(sf::Vector2f(
+            0.f,
+            player.getPosition().y - (abs(v.getCenter().y) - utility::game::viewBounds.y.x)
+        ));
+    }
+    else if (abs(player.getPosition().y) > abs(v.getCenter().y + utility::game::viewBounds.y.y)) {
+        v.move(sf::Vector2f(
+            0.f,
+            player.getPosition().y - (abs(v.getCenter().y) + utility::game::viewBounds.y.y)
+        ));
+    }
+    
+    winRef.setView(v);
 
     entity.RunPhysics();
 }
@@ -46,7 +78,8 @@ void Game::ResizeUI() {
 }
 
 void Game::DrawContext() {
-    winRef.draw(this->tileExample);
+    tilemap.Draw(winRef);
+    winRef.draw(this->player);
     entity.Draw(winRef);
 }
 

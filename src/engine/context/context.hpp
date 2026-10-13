@@ -8,7 +8,7 @@ namespace engine {
     class Context {
         // Public functions
     public:
-        Context(sf::RenderWindow&, const sf::View&, const sf::View&); // TODO: 1st view should not be const for game context bus assess later
+        Context(sf::RenderWindow&, sf::View&, const sf::View&); // TODO: 1st view should not be const for game context bus assess later
         virtual void Reload();
         virtual bool Poll(const std::optional<sf::Event>&, void*);
         virtual void Physics();
@@ -20,7 +20,7 @@ namespace engine {
         // Private members
     protected:
         sf::RenderWindow& winRef;
-        const sf::View& viewGame;
+        sf::View& viewGame;
         const sf::View& viewUI;
     };
 }

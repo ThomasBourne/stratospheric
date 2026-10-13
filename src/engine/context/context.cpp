@@ -1,6 +1,6 @@
 #include "context.hpp"
 
-engine::Context::Context(sf::RenderWindow& win, const sf::View& viewGame, const sf::View& viewUI) :
+engine::Context::Context(sf::RenderWindow& win, sf::View& viewGame, const sf::View& viewUI) :
     winRef(win),
     viewGame(viewGame),
     viewUI(viewUI)

@@ -26,6 +26,7 @@ add_executable(
     src/engine/context/context.cpp
     src/engine/settings/settings.cpp
     src/engine/settings/value.cpp
+    src/engine/tilemap/tilemap.cpp
     src/engine/entity/entity.cpp
     src/engine/entity/controllableentity.cpp
     src/engine/render_utility/fpsdisplay.cpp

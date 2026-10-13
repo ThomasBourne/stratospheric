@@ -14,7 +14,10 @@ const std::string utility::assets::tilemap{ "tilemap.png" };
 const std::string utility::assets::defaultFont{ "fc.ttf" };
 const std::string utility::assets::sheepTexture{ "sheep.png" };
 
-const int utility::tilemapDefinition{ 100 };
+const std::string utility::game::tilemapFileName{ "map.save" };
+const int utility::game::tilemapDefinition{ 100 };
+const sf::Vector2i utility::game::tileSize{ utility::game::tilemapDefinition, utility::game::tilemapDefinition };
+const sf::Vector2<sf::Vector2f> utility::game::viewBounds{ {150.f, 150.f}, {100.f, 100.f} };
 
 const std::string utility::settings::settingsFile{ "settings.strat" };
 const std::string utility::settings::compatibleConfigVersion{ "0.0.1" };
