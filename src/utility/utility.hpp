@@ -38,6 +38,7 @@ namespace utility {
         extern const std::string splashScreen;
         extern const std::string tilemap;
         extern const std::string defaultFont;
+        extern const std::string playerTexture;
         extern const std::string sheepTexture;
     }
 
@@ -58,6 +59,7 @@ namespace utility {
     namespace animate {
         namespace player {
             extern const size_t framesPerAnimationFrame;
+            extern const sf::Vector2f playerSize;
         }
     }
 

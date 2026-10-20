@@ -4,7 +4,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <iostream>
 
 engine::Tilemap::Tilemap(sf::Texture& allTiles) :
     texture(allTiles),
@@ -69,13 +68,11 @@ void engine::Tilemap::LoadAndInitFromFile(std::string filePath, sf::Sprite& play
 		case(1): {
 			// Width
 			width = std::stoi(contents);
-            std::cout << "Width: " << width << std::endl;
 			break;
 		}
 		case(2): {
 			// Height
 			height = std::stoi(contents);
-            std::cout << "Height: " << height << std::endl;
 			break;
 		}
 		case(3): {
@@ -135,8 +132,8 @@ sf::Vector2<bool> engine::Tilemap::GetCollisionData(sf::FloatRect shape) {
 			) {
 			const size_t index{ x + y * this->width };
 			if (this->collisionMap[index]) {
-				this->collisionShapes[this->collisionMap[index] - 1].position.y = (float)(index % this->width) * utility::game::tilemapDefinition;
-				this->collisionShapes[this->collisionMap[index] - 1].position.x = (float)(index / this->width) * utility::game::tilemapDefinition;
+				this->collisionShapes[this->collisionMap[index] - 1].position.y = (float)(index / this->width) * utility::game::tilemapDefinition;
+				this->collisionShapes[this->collisionMap[index] - 1].position.x = (float)(index % this->width) * utility::game::tilemapDefinition;
 				collidableItems.push_back(this->collisionShapes[this->collisionMap[index] - 1]);
 			}
 
@@ -159,6 +156,7 @@ sf::Vector2<bool> engine::Tilemap::GetCollisionData(sf::FloatRect shape) {
 			}
 		}
 	}
+	this->collidableItems = collidableItems;
 	return newPos;
 }
 

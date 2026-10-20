@@ -3,6 +3,8 @@
 
 #include "entity.hpp"
 
+#include "../tilemap/tilemap.hpp"
+
 namespace engine {
     class ControllableEntity : public Entity {
         // Public Members
@@ -10,6 +12,9 @@ namespace engine {
 
         // Public Functions
     public:
+        ControllableEntity(sf::Texture&);
+        void RunPhysics(engine::Tilemap& tilemap, void* customData);
+        sf::Sprite& GetSpriteForModify();
 
         // Protected Members
     protected:

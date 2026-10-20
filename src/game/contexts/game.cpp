@@ -6,19 +6,19 @@
 
 using namespace game::contexts;
 
-Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap, sf::Texture& entityTexture) :
+Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap, sf::Texture& playerTexture, sf::Texture& entityTexture) :
     engine::Context(winRef, viewGame, viewUI),
-    player(tilemap),
+    player(playerTexture),
     entity(entityTexture, sf::Vector2f(50.f, 30.f), {std::make_pair<size_t, size_t>(0, 0),std::make_pair<size_t, size_t>(1, 2)}),
     tilemap(tilemap)
     {
         // TODO: Move this to reload & unload when unload is implemented
-        this->tilemap.LoadAndInitFromFile( ASSET_FILE(utility::game::tilemapFileName), player );
+        this->tilemap.LoadAndInitFromFile( ASSET_FILE(utility::game::tilemapFileName), player.GetSpriteForModify() );
     }
 
 void Game::Reload() {
-    player.setPosition(sf::Vector2f(800.f, 200.f));
-    player.setTextureRect({{0, 0}, {utility::game::tilemapDefinition, utility::game::tilemapDefinition}});
+    // player.setPosition(sf::Vector2f(800.f, 200.f));
+    // player.setTextureRect({{0, 0}, {utility::game::tilemapDefinition, utility::game::tilemapDefinition}});
 }
 
 bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
@@ -26,41 +26,31 @@ bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
 }
 
 void Game::Physics() {
-    // TODO: Current implementation will enable sideways movement to be quicker than L-R & U-D
-    // Must take in vec2f of magnitude (0-1, 0-1) then perform calculation with stepWeight to determine where on the circle the 2 points are 
-    constexpr float stepWeight{ 1.25f };
-    const sf::Vector2f cardinality {
-        stepWeight * sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D) +
-        -stepWeight * sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A),
-        stepWeight * sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::S) +
-        -stepWeight * sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W)
-    };
-    
-    player.move(cardinality);
+    this->player.RunPhysics(tilemap, nullptr);
     
     // Check if view needs shifting
     // This is slightly unexpected behaviour with the latter checks, but its ok because its slightly quicker (probably)
     sf::View& v = viewGame;
-    if (abs(player.getPosition().x) < abs(v.getCenter().x - utility::game::viewBounds.x.x)) {
+    if (abs(player.GetPosition().x) < abs(v.getCenter().x - utility::game::viewBounds.x.x)) {
         v.move(sf::Vector2f(
-            player.getPosition().x - (abs(v.getCenter().x) - utility::game::viewBounds.x.x)
+            player.GetPosition().x - (abs(v.getCenter().x) - utility::game::viewBounds.x.x)
         , 0.f));
     }
-    else if (abs(player.getPosition().x) > abs(v.getCenter().x + utility::game::viewBounds.x.y)) {
+    else if (abs(player.GetPosition().x) > abs(v.getCenter().x + utility::game::viewBounds.x.y)) {
         v.move(sf::Vector2f(
-            player.getPosition().x - (abs(v.getCenter().x) + utility::game::viewBounds.x.y)
+            player.GetPosition().x - (abs(v.getCenter().x) + utility::game::viewBounds.x.y)
             , 0.f));
     }
-    if (abs(player.getPosition().y) < abs(v.getCenter().y - utility::game::viewBounds.y.x)) {
+    if (abs(player.GetPosition().y) < abs(v.getCenter().y - utility::game::viewBounds.y.x)) {
         v.move(sf::Vector2f(
             0.f,
-            player.getPosition().y - (abs(v.getCenter().y) - utility::game::viewBounds.y.x)
+            player.GetPosition().y - (abs(v.getCenter().y) - utility::game::viewBounds.y.x)
         ));
     }
-    else if (abs(player.getPosition().y) > abs(v.getCenter().y + utility::game::viewBounds.y.y)) {
+    else if (abs(player.GetPosition().y) > abs(v.getCenter().y + utility::game::viewBounds.y.y)) {
         v.move(sf::Vector2f(
             0.f,
-            player.getPosition().y - (abs(v.getCenter().y) + utility::game::viewBounds.y.y)
+            player.GetPosition().y - (abs(v.getCenter().y) + utility::game::viewBounds.y.y)
         ));
     }
     
@@ -79,7 +69,7 @@ void Game::ResizeUI() {
 
 void Game::DrawContext() {
     tilemap.Draw(winRef);
-    winRef.draw(this->player);
+    player.Draw(winRef);
     entity.Draw(winRef);
 }
 

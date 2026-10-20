@@ -5,6 +5,7 @@
 const std::string utility::windowName{ "Hello Window!" };
 const sf::Vector2u utility::defaultWindowSize{ 1920U, 1080U };
 const unsigned int utility::stepRate{ 200 };
+// const unsigned int utility::stepRate{ 1 };
 const unsigned int utility::frameStepInfoUpdate{ 200 };
 bool utility::_window::isWindowFullscreen{ false }; // False by default, see todo
 
@@ -12,6 +13,7 @@ std::string utility::assets::assetFolderPath{ "/assets/" };
 const std::string utility::assets::splashScreen{ "splash_screen.png" };
 const std::string utility::assets::tilemap{ "tilemap.png" };
 const std::string utility::assets::defaultFont{ "fc.ttf" };
+const std::string utility::assets::playerTexture{ "player.png" };
 const std::string utility::assets::sheepTexture{ "sheep.png" };
 
 const std::string utility::game::tilemapFileName{ "map.save" };
@@ -25,6 +27,7 @@ const std::string utility::settings::compatibleLevelVersion{ "0.0.1" };
 const char utility::settings::globalDelimiter{ ',' };
 
 const size_t utility::animate::player::framesPerAnimationFrame{ 25ULL };
+const sf::Vector2f utility::animate::player::playerSize{ 50.f, 75.f };
 
 std::string utility::GetCWD() {
     std::string cwd = std::filesystem::current_path().string();

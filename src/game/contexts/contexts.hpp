@@ -8,7 +8,8 @@
 #include "../../engine/context/context.hpp"
 #include "../../engine/settings/settings.hpp"
 #include "../../engine/tilemap/tilemap.hpp"
-#include "../../engine/entity/entity.hpp" // TODO: REMOVE AS IT IS DEMO ENTITY
+#include "../../engine/entity/entity.hpp"
+#include "../../engine/entity/controllableentity.hpp"
 
 #define THE_BIG_THREE sf::RenderWindow&, sf::View&, const sf::View&
 #define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, sf::View& viewGame, const sf::View& viewUI
@@ -52,7 +53,7 @@ namespace game {
         class Game : public engine::Context {
             // Public functions
         public:
-            Game(THE_BIG_THREE, sf::Texture&, sf::Texture&);
+            Game(THE_BIG_THREE, sf::Texture&, sf::Texture&, sf::Texture&);
             void Reload();
             bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
@@ -63,7 +64,7 @@ namespace game {
 
             // Private members
         private:
-            sf::Sprite player;
+            engine::ControllableEntity player;
             engine::Entity entity;
             engine::Tilemap tilemap;
         };
