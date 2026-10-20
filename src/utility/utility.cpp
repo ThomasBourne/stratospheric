@@ -5,7 +5,6 @@
 const std::string utility::windowName{ "Hello Window!" };
 const sf::Vector2u utility::defaultWindowSize{ 1920U, 1080U };
 const unsigned int utility::stepRate{ 200 };
-// const unsigned int utility::stepRate{ 1 };
 const unsigned int utility::frameStepInfoUpdate{ 200 };
 bool utility::_window::isWindowFullscreen{ false }; // False by default, see todo
 
