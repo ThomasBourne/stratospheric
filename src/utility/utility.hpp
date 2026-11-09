@@ -40,6 +40,7 @@ namespace utility {
         extern const std::string defaultFont;
         extern const std::string playerTexture;
         extern const std::string sheepTexture;
+        extern const std::string items;
     }
 
     namespace game {

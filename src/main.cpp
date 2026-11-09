@@ -9,6 +9,7 @@
 #include "engine/context/context.hpp" // Window context framework for typing
 #include "engine/settings/settings.hpp" // Settings file object manager
 #include "engine/render_utility/fpsdisplay.hpp" // FPS display object
+#include "engine/ui/ui.hpp" // UI Inventory renderer for Game Context
 
 // Game Classes
 #include "game/contexts/contexts.hpp" // Window context classes
@@ -70,11 +71,15 @@ int main() {
 	sf::Texture tilemapTexture{ ASSET_FILE(util::assets::tilemap) };
 	sf::Texture playerTexture{ ASSET_FILE(util::assets::playerTexture) };
 	sf::Texture sheepTexture{ ASSET_FILE(util::assets::sheepTexture) };
+	sf::Texture itemsTexture{ ASSET_FILE(util::assets::items) };
+
+	// Configure auxiliary components
+	e::UI_Template ui {nullptr, itemsTexture, defaultFont};
 
 	// Initialise Contexts
 	#define BIG_THREE_INIT window, viewGame, viewUI
 	g::contexts::SplashScreen contextSplashScreen{ BIG_THREE_INIT, defaultFont, splashScreenTexture };
-	g::contexts::Game contextGame{ BIG_THREE_INIT, tilemapTexture, playerTexture, sheepTexture };
+	g::contexts::Game contextGame{ BIG_THREE_INIT, tilemapTexture, playerTexture, sheepTexture, ui };
 	g::contexts::Settings contextSettings{ BIG_THREE_INIT, screenshotTexture, previousContext, settings };
 
 	// Map Contexts

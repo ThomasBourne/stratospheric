@@ -19,7 +19,6 @@ namespace engine {
         sf::Vector2<bool> GetCollisionData(sf::FloatRect); // TODO: Collision seems to have been ported wrong
         void Draw(sf::RenderWindow& win);
         void UpdatePlayerLoadPosition(sf::Vector2f);
-        sf::Sprite& DELETE_ME_GetSprite() { return renderSprite; }
         ~Tilemap();
 
         // Private functions
@@ -37,7 +36,6 @@ namespace engine {
         sf::FloatRect* collisionShapes;
         std::uint8_t* collisionMap;
         sf::Texture& texture;
-	std::vector<sf::FloatRect> collidableItems;
 
     };
 }

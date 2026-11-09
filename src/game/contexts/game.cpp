@@ -6,14 +6,18 @@
 
 using namespace game::contexts;
 
-Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap, sf::Texture& playerTexture, sf::Texture& entityTexture) :
+Game::Game(THE_BIG_THREE_WITH_TEXT, sf::Texture& tilemap, sf::Texture& playerTexture, sf::Texture& entityTexture, engine::UI_Template& ui) :
     engine::Context(winRef, viewGame, viewUI),
     player(playerTexture),
     entity(entityTexture, sf::Vector2f(50.f, 30.f), {std::make_pair<size_t, size_t>(0, 0),std::make_pair<size_t, size_t>(1, 2)}),
-    tilemap(tilemap)
+    tilemap(tilemap),
+    ui(ui)
     {
         // TODO: Move this to reload & unload when unload is implemented
         this->tilemap.LoadAndInitFromFile( ASSET_FILE(utility::game::tilemapFileName), player.GetSpriteForModify() );
+
+        this->isUiShown = false;
+        this->ui.SetInventoryControl(&this->isUiShown);
     }
 
 void Game::Reload() {
@@ -22,10 +26,25 @@ void Game::Reload() {
 }
 
 bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
+     if (
+        event->is<sf::Event::KeyReleased>()
+    ) {
+        if(event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::Escape) {
+            *((Contexts*)nextContext) = Contexts::Settings;
+            return true;
+        }
+        else if(event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::M) {
+            this->isUiShown = !this->isUiShown;
+        }
+    }
     return false;
 }
 
 void Game::Physics() {
+    if (this->isUiShown) {
+        return;
+    }
+
     this->player.RunPhysics(tilemap, nullptr);
     
     // Check if view needs shifting
@@ -64,7 +83,7 @@ void Game::PhysicsUI() {
 }
 
 void Game::ResizeUI() {
-
+    ui.Resize(this->viewUI);
 }
 
 void Game::DrawContext() {
@@ -74,5 +93,5 @@ void Game::DrawContext() {
 }
 
 void Game::DrawUIContext() {
-
+    ui.Draw(winRef);
 }

@@ -13,6 +13,9 @@ engine::ControllableEntity::ControllableEntity(sf::Texture& controllablesTexture
 }
 
 void engine::ControllableEntity::RunPhysics(engine::Tilemap& tilemap, void* customData) {
+	// To set speed do this formula:
+	// TODO: Lower this to entity animation too so that the step is decoupled from the frame rate
+	// (1.5 * (200/60)) * 60
     constexpr float stepWeight{ 1.5f };
 
     // TODO: Current implementation will enable sideways movement to be quicker than L-R & U-D

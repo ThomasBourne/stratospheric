@@ -31,8 +31,8 @@ void Settings::Reload() {
 bool Settings::Poll(const std::optional<sf::Event>& event,void* nextContext) {
     // Return to previous context
     if (
-        event->is<sf::Event::KeyPressed>() &&
-        event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::Escape
+        event->is<sf::Event::KeyReleased>() &&
+        event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::Escape
     ) {
         *((Contexts*)nextContext) = previousContext;
         return true;

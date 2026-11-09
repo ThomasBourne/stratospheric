@@ -156,7 +156,6 @@ sf::Vector2<bool> engine::Tilemap::GetCollisionData(sf::FloatRect shape) {
 			}
 		}
 	}
-	this->collidableItems = collidableItems;
 	return newPos;
 }
 

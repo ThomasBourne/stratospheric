@@ -14,6 +14,7 @@ const std::string utility::assets::tilemap{ "tilemap.png" };
 const std::string utility::assets::defaultFont{ "fc.ttf" };
 const std::string utility::assets::playerTexture{ "player.png" };
 const std::string utility::assets::sheepTexture{ "sheep.png" };
+const std::string utility::assets::items{ "items.png" };
 
 const std::string utility::game::tilemapFileName{ "map.save" };
 const int utility::game::tilemapDefinition{ 100 };

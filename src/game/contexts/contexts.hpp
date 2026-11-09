@@ -10,6 +10,7 @@
 #include "../../engine/tilemap/tilemap.hpp"
 #include "../../engine/entity/entity.hpp"
 #include "../../engine/entity/controllableentity.hpp"
+#include "../../engine/ui/ui.hpp"
 
 #define THE_BIG_THREE sf::RenderWindow&, sf::View&, const sf::View&
 #define THE_BIG_THREE_WITH_TEXT sf::RenderWindow& winRef, sf::View& viewGame, const sf::View& viewUI
@@ -53,7 +54,7 @@ namespace game {
         class Game : public engine::Context {
             // Public functions
         public:
-            Game(THE_BIG_THREE, sf::Texture&, sf::Texture&, sf::Texture&);
+            Game(THE_BIG_THREE, sf::Texture&, sf::Texture&, sf::Texture&, engine::UI_Template&);
             void Reload();
             bool Poll(const std::optional<sf::Event>&, void*);
             void Physics();
@@ -67,6 +68,9 @@ namespace game {
             engine::ControllableEntity player;
             engine::Entity entity;
             engine::Tilemap tilemap;
+            engine::UI_Template& ui;
+
+            bool isUiShown;
         };
 
         class Settings : public engine::Context {
