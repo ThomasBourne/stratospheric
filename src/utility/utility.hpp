@@ -18,6 +18,7 @@ namespace utility {
         AssetFileLoadFailed = 101,
         SettingsFileLoadFailed = 102,
         TilemapFileLoadFailed = 103,
+        KeybindFileLoadFailed = 104,
             // 11X File Write Errors
         fileWriteFailed = 110,
         SettingsileWriteFailed = 112,
@@ -52,8 +53,10 @@ namespace utility {
 
     namespace settings {
         extern const std::string settingsFile;
+        extern const std::string keybindsFile;
         extern const std::string compatibleConfigVersion;
         extern const std::string compatibleLevelVersion;
+        extern const std::string compatibleKeybindVersion;
         extern const char globalDelimiter;
     }
 

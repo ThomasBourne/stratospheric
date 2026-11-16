@@ -22,8 +22,10 @@ const sf::Vector2i utility::game::tileSize{ utility::game::tilemapDefinition, ut
 const sf::Vector2<sf::Vector2f> utility::game::viewBounds{ {150.f, 150.f}, {100.f, 100.f} };
 
 const std::string utility::settings::settingsFile{ "settings.strat" };
+const std::string utility::settings::keybindsFile{ "keybinds.stratconf" };
 const std::string utility::settings::compatibleConfigVersion{ "0.0.1" };
 const std::string utility::settings::compatibleLevelVersion{ "0.0.1" };
+const std::string utility::settings::compatibleKeybindVersion{ "0.0.1" };
 const char utility::settings::globalDelimiter{ ',' };
 
 const size_t utility::animate::player::framesPerAnimationFrame{ 25ULL };

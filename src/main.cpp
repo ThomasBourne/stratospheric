@@ -7,6 +7,7 @@
 
 // Engine Classes
 #include "engine/context/context.hpp" // Window context framework for typing
+#include "engine/settings/keybinds.hpp" // Keybinds file object manager
 #include "engine/settings/settings.hpp" // Settings file object manager
 #include "engine/render_utility/fpsdisplay.hpp" // FPS display object
 #include "engine/ui/ui.hpp" // UI Inventory renderer for Game Context
@@ -31,7 +32,8 @@ g::Contexts nextContext{ g::Contexts::SplashScreen };
 // Load all fonts
 sf::Font defaultFont{ ASSET_FILE(util::assets::defaultFont) };
 // Load settings config
-e::Settings settings{ defaultFont };
+e::Keybinds keybinds{ };
+e::Settings settings{ defaultFont, keybinds };
 // TODO: Change how this is passed through so the wrapper function can be deleted
 util::StratErrorCodes SettingsFileWriteWrapper(const std::string& settingsFile) { return settings.WriteToFile(settingsFile); }
 
@@ -51,10 +53,15 @@ void ChangeCurrentContext(
 }
 
 int main() {
+	const util::StratErrorCodes keybindsSuccess = keybinds.LoadFromFile(ASSET_FILE(util::settings::keybindsFile));
+	if (keybindsSuccess != util::StratErrorCodes::OK) {
+		exit((int)keybindsSuccess);
+	}
+
 	const util::StratErrorCodes settingsSuccess = settings.LoadFromFile(ASSET_FILE(util::settings::settingsFile));
 	if (settingsSuccess != util::StratErrorCodes::OK) {
 		exit((int)settingsSuccess);
-	}
+	}	
 
 	// Initialise Render components
 	sf::RenderWindow window;
@@ -120,23 +127,13 @@ int main() {
 				// Call custom resize function for context to fix this issue
 				contexts[selectedContext]->ResizeUI();
 			}
-			// Custom Function
-			else if (
-				event->is<sf::Event::KeyPressed>() &&
-				event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::G
-			) {
-				nextContext = selectedContext == g::Contexts::SplashScreen ?
-					g::Contexts::Game :
-					g::Contexts::SplashScreen;
-				ChangeCurrentContext(contexts, viewGame, viewUI);
-			}
 			// Let current context handle poll
-			(void)contexts[selectedContext]->Poll(event, &nextContext);
+			(void)contexts[selectedContext]->Poll(event, keybinds, &nextContext);
 		}
 
 		// Perform physic steps
 		window.setView(viewGame);
-		contexts[selectedContext]->Physics();
+		contexts[selectedContext]->Physics(keybinds);
 		viewGame = window.getView();
 		window.setView(viewUI);
 		contexts[selectedContext]->PhysicsUI();

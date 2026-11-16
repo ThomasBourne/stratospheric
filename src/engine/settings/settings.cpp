@@ -19,7 +19,10 @@
 
 using namespace engine;
 
-Settings::Settings(sf::Font& font) : fontRef(font), selectedValue(nullptr) {
+Settings::Settings(sf::Font& font, Keybinds& keybinds) :
+    fontRef(font),
+    selectedValue(nullptr),
+    keybinds(keybinds) {
     this->selectedHighlight.setFillColor(sf::Color::Green);
 }
 

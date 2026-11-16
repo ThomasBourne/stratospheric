@@ -4,6 +4,7 @@
 #include "entity.hpp"
 
 #include "../tilemap/tilemap.hpp"
+#include "../settings/keybinds.hpp"
 
 namespace engine {
     class ControllableEntity : public Entity {
@@ -13,7 +14,7 @@ namespace engine {
         // Public Functions
     public:
         ControllableEntity(sf::Texture&);
-        void RunPhysics(engine::Tilemap& tilemap, void* customData);
+        void RunPhysics(engine::Tilemap& tilemap, engine::Keybinds& keybinds, void* customData);
         sf::Sprite& GetSpriteForModify();
 
         // Protected Members

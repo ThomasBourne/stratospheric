@@ -25,27 +25,27 @@ void Game::Reload() {
     // player.setTextureRect({{0, 0}, {utility::game::tilemapDefinition, utility::game::tilemapDefinition}});
 }
 
-bool Game::Poll(const std::optional<sf::Event>& event, void* nextContext) {
+bool Game::Poll(const std::optional<sf::Event>& event, engine::Keybinds& keybinds, void* nextContext) {
      if (
         event->is<sf::Event::KeyReleased>()
     ) {
-        if(event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::Escape) {
+        if(event->getIf<sf::Event::KeyReleased>()->code == keybinds.menuClose) {
             *((Contexts*)nextContext) = Contexts::Settings;
             return true;
         }
-        else if(event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::M) {
+        else if(event->getIf<sf::Event::KeyReleased>()->code == keybinds.menuOpen) {
             this->isUiShown = !this->isUiShown;
         }
     }
     return false;
 }
 
-void Game::Physics() {
+void Game::Physics(engine::Keybinds& keybinds) {
     if (this->isUiShown) {
         return;
     }
 
-    this->player.RunPhysics(tilemap, nullptr);
+    this->player.RunPhysics(tilemap, keybinds, nullptr);
     
     // Check if view needs shifting
     // This is slightly unexpected behaviour with the latter checks, but its ok because its slightly quicker (probably)

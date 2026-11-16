@@ -6,6 +6,7 @@
 
 // Local Imports
 #include "../../engine/context/context.hpp"
+#include "../../engine/settings/keybinds.hpp"
 #include "../../engine/settings/settings.hpp"
 #include "../../engine/tilemap/tilemap.hpp"
 #include "../../engine/entity/entity.hpp"
@@ -29,8 +30,8 @@ namespace game {
         public:
             SplashScreen(THE_BIG_THREE, sf::Font&, sf::Texture&);
             void Reload();
-            bool Poll(const std::optional<sf::Event>&, void*);
-            void Physics();
+            bool Poll(const std::optional<sf::Event>&, engine::Keybinds&, void*);
+            void Physics(engine::Keybinds&);
             void PhysicsUI();
             void ResizeUI();
             void DrawContext();
@@ -56,8 +57,8 @@ namespace game {
         public:
             Game(THE_BIG_THREE, sf::Texture&, sf::Texture&, sf::Texture&, engine::UI_Template&);
             void Reload();
-            bool Poll(const std::optional<sf::Event>&, void*);
-            void Physics();
+            bool Poll(const std::optional<sf::Event>&, engine::Keybinds&, void*);
+            void Physics(engine::Keybinds&);
             void PhysicsUI();
             void ResizeUI();
             void DrawContext();
@@ -78,8 +79,8 @@ namespace game {
         public:
             Settings(THE_BIG_THREE,  sf::Texture&, Contexts&, engine::Settings&);
             void Reload();
-            bool Poll(const std::optional<sf::Event>&, void*);
-            void Physics();
+            bool Poll(const std::optional<sf::Event>&, engine::Keybinds&, void*);
+            void Physics(engine::Keybinds&);
             void PhysicsUI();
             void ResizeUI();
             void DrawContext();

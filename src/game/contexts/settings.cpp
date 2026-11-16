@@ -28,11 +28,11 @@ void Settings::Reload() {
     this->capture.setPosition(sf::Vector2f(0.f, 0.f));
 }
 
-bool Settings::Poll(const std::optional<sf::Event>& event,void* nextContext) {
+bool Settings::Poll(const std::optional<sf::Event>& event, engine::Keybinds& keybinds, void* nextContext) {
     // Return to previous context
     if (
         event->is<sf::Event::KeyReleased>() &&
-        event->getIf<sf::Event::KeyReleased>()->code == sf::Keyboard::Key::Escape
+        event->getIf<sf::Event::KeyReleased>()->code == keybinds.menuClose
     ) {
         *((Contexts*)nextContext) = previousContext;
         return true;
@@ -63,7 +63,7 @@ bool Settings::Poll(const std::optional<sf::Event>& event,void* nextContext) {
     return false;
 }
 
-void Settings::Physics() { }
+void Settings::Physics(engine::Keybinds& keybinds) { }
 
 void Settings::PhysicsUI() {
 

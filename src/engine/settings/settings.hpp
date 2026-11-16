@@ -5,6 +5,8 @@
 
 #include "../../utility/utility.hpp"
 
+#include "keybinds.hpp"
+
 namespace engine {
     class Settings {
         // Public Classes
@@ -37,7 +39,7 @@ namespace engine {
 
         // Public Functions
     public:
-        Settings(sf::Font&); // Does not deserialise by default to return error code
+        Settings(sf::Font&, Keybinds&); // Does not deserialise by default to return error code
         utility::StratErrorCodes LoadFromFile(const std::string& settingsPath);
         utility::StratErrorCodes WriteToFile(const std::string& settingsPath);
 
@@ -55,6 +57,8 @@ namespace engine {
         std::vector<ToggleValue> booleanValues;
         Value* selectedValue;
         sf::RectangleShape selectedHighlight;
+
+        Keybinds keybinds;
 
         // Private Functions
     private:

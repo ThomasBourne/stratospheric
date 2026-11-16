@@ -6,8 +6,8 @@ engine::Context::Context(sf::RenderWindow& win, sf::View& viewGame, const sf::Vi
     viewUI(viewUI)
     { }
 void engine::Context::Reload() { }
-bool engine::Context::Poll(const std::optional<sf::Event>&, void* nextContext) { return false; }
-void engine::Context::Physics() { }
+bool engine::Context::Poll(const std::optional<sf::Event>&, engine::Keybinds& keybinds, void* nextContext) { return false; }
+void engine::Context::Physics(engine::Keybinds& keybinds) { }
 void engine::Context::PhysicsUI() { }
 void engine::Context::ResizeUI() { }
 void engine::Context::DrawContext() { }

@@ -32,7 +32,7 @@ void SplashScreen::Reload() {
     }
 }
 
-bool SplashScreen::Poll(const std::optional<sf::Event>& event, void* nextContext) {
+bool SplashScreen::Poll(const std::optional<sf::Event>& event, engine::Keybinds& keybinds, void* nextContext) {
     if (
         event->is<sf::Event::MouseButtonReleased>() &&
         event->getIf<sf::Event::MouseButtonReleased>()->button == sf::Mouse::Button::Left
@@ -48,7 +48,7 @@ bool SplashScreen::Poll(const std::optional<sf::Event>& event, void* nextContext
     return false;
 }
 
-void SplashScreen::Physics() { }
+void SplashScreen::Physics(engine::Keybinds& keybinds) { }
 
 void SplashScreen::PhysicsUI() {
 
